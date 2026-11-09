@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="robots" content="noindex, nofollow">
+<script>window.ATO_WP = { root: '' };</script>
+<meta name="referrer" content="no-referrer">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="./ato-store.js"></script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#e8eff5;color:#22333f;font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#2774ae;text-decoration:none}
+  a:hover{color:#005587}
+  input,textarea,button{font-family:inherit}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <header style="background:#003b5c;padding:14px 24px;display:flex;align-items:center;gap:13px">
+    <div style="width:38px;height:38px;border-radius:10px;background:#2774ae;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;color:#fff;border-bottom:3px solid #ffc72c;flex:none">ATO</div>
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <span style="font-size:15px;font-weight:700;color:#fff">Academic Trainee Office</span>
+      <span style="font-size:12px;color:#9cc0dc;font-weight:500">Semel Institute · appointment approval</span>
+    </div>
+  </header>
+
+  <main style="flex:1;padding:36px 20px 64px">
+    <div style="max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+
+      <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:40px;text-align:center;font-size:14px;color:#5b6f7d">Loading the packet…</div>
+      </sc-if>
+
+      <sc-if value="{{ isClosed }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:34px 32px;display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a33a2f;font-weight:600">{{ closedEyebrow }}</span>
+          <h1 style="margin:0;font-size:26px;line-height:1.2;color:#003b5c;letter-spacing:-.01em">{{ closedTitle }}</h1>
+          <p style="margin:0;font-size:14.5px;line-height:1.6;color:#5b6f7d;max-width:60ch;text-wrap:pretty">{{ closedBody }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasPacket }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:8px;padding:4px 2px 6px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2774ae;font-weight:600">{{ eyebrow }}</span>
+          <h1 style="margin:0;font-size:30px;line-height:1.15;color:#003b5c;letter-spacing:-.02em;text-wrap:pretty">{{ headline }}</h1>
+          <p style="margin:0;font-size:14.5px;line-height:1.6;color:#5b6f7d;max-width:66ch;text-wrap:pretty">{{ intro }}</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="3">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;color:#12303f;background:#fff;border:1px solid #cfdae4;border-radius:7px;padding:4px 9px">{{ c }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+          <div style="background:{{ doneBg }};border:1.5px solid {{ doneBd }};border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:16px;font-weight:700;color:{{ doneFg }}">{{ doneTitle }}</span>
+            <span style="font-size:13.5px;line-height:1.55;color:#33495a;text-wrap:pretty">{{ doneBody }}</span>
+          </div>
+        </sc-if>
+
+        <section style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:22px 24px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7f93a1;font-weight:600;margin-bottom:14px">Appointment</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px 24px">
+            <sc-for list="{{ facts }}" as="f" hint-placeholder-count="8">
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                <span style="font-size:11.5px;color:#7f93a1;font-weight:600">{{ f.k }}</span>
+                <span style="font-size:14px;color:#12303f;font-weight:600;overflow-wrap:anywhere">{{ f.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:22px 24px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7f93a1;font-weight:600">Funding</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#93a6b3">{{ fundCount }}</span>
+          </div>
+          <sc-if value="{{ noLines }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;font-size:13.5px;color:#5b6f7d">No UCLA funding lines on this packet.</p>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:minmax(0,1.6fr) auto minmax(0,1fr) minmax(0,1.1fr);gap:12px;align-items:center;padding:11px 13px;border:1px solid #eef3f7;border-radius:10px;background:{{ l.bg }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#12303f;font-weight:500;overflow-wrap:anywhere">{{ l.fau }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b6f7d">{{ l.pct }}</span>
+                <span style="font-size:12px;color:#5b6f7d">{{ l.dates }}</span>
+                <span style="font-size:12.5px;color:#33495a;text-align:right">{{ l.fm }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+          <section style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:22px 24px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7f93a1;font-weight:600;margin-bottom:12px">Documents</div>
+            <sc-if value="{{ noDocs }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:13.5px;color:#5b6f7d">No attachments are required for this packet.</p></sc-if>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ docs }}" as="d" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:10px;font-size:13.5px;color:{{ d.fg }}">
+                  <span style="width:18px;height:18px;border-radius:5px;border:1.5px solid {{ d.bd }};background:{{ d.bg }};color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none">{{ d.mark }}</span>
+                  <span style="flex:1">{{ d.label }}</span>
+                  <span style="font-size:11.5px;font-family:'IBM Plex Mono',monospace">{{ d.state }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <p style="margin:12px 0 0;font-size:12px;color:#7f93a1;line-height:1.5">The ATO office holds the documents. Ask the office if you need a copy.</p>
+          </section>
+          <section style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:22px 24px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7f93a1;font-weight:600;margin-bottom:12px">Approval route</div>
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <sc-for list="{{ route }}" as="r" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:9px;background:{{ r.bg }}">
+                  <span style="width:22px;height:22px;border-radius:50%;border:1.5px solid {{ r.bd }};background:{{ r.dotBg }};color:{{ r.dotFg }};font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none">{{ r.mark }}</span>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                    <span style="font-size:13px;font-weight:700;color:#2f4451">{{ r.label }}</span>
+                    <span style="font-size:12px;color:#7f93a1">{{ r.name }}</span>
+                  </div>
+                  <span style="font-size:12px;font-weight:600;color:{{ r.fg }}">{{ r.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </div>
+
+        <sc-if value="{{ hasIssues }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:22px 24px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7f93a1;font-weight:600;margin-bottom:12px">Notes from the intake checks · {{ checkSummary }}</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <sc-for list="{{ issues }}" as="v" hint-placeholder-count="2">
+                <div style="display:flex;gap:10px;font-size:13px;line-height:1.5;color:#33495a"><span style="width:7px;height:7px;border-radius:50%;background:{{ v.dot }};margin-top:6px;flex:none"></span><span>{{ v.message }}</span></div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ isOpen }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#fff;border:1.5px solid #2774ae;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 40px -30px rgba(0,59,92,.6)">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:18px;font-weight:700;color:#003b5c">Your decision</span>
+              <span style="font-size:13.5px;color:#5b6f7d;line-height:1.55;text-wrap:pretty">{{ decisionIntro }}</span>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12.5px;font-weight:700;color:#33495a">Type your full name</span>
+              <input value="{{ name }}" onInput="{{ onName }}" autocomplete="name" style="max-width:420px;padding:11px 13px;border:1.5px solid #cfdae4;border-radius:10px;font-size:15px;background:#f7fafc" style-focus="border-color:#2774ae;background:#fff;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12.5px;font-weight:700;color:#33495a">Note <span style="font-weight:500;color:#7f93a1">(required if you request changes)</span></span>
+              <textarea value="{{ note }}" onInput="{{ onNote }}" rows="3" style="padding:11px 13px;border:1.5px solid #cfdae4;border-radius:10px;font-size:14px;line-height:1.5;background:#f7fafc;resize:vertical" style-focus="border-color:#2774ae;background:#fff;outline:none"></textarea>
+            </label>
+            <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#a33a2f;font-weight:600">{{ err }}</div></sc-if>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button onClick="{{ approve }}" style="font-size:14px;font-weight:700;color:#fff;background:#2774ae;border:0;border-radius:10px;padding:12px 20px;cursor:pointer" style-hover="background:#005587">{{ approveLabel }}</button>
+              <button onClick="{{ changes }}" style="font-size:14px;font-weight:700;color:#a0742a;background:#fff;border:1.5px solid #e3cfa6;border-radius:10px;padding:12px 18px;cursor:pointer" style-hover="border-color:#a0742a">Request changes</button>
+            </div>
+            <p style="margin:0;font-size:12px;line-height:1.55;color:#7f93a1;text-wrap:pretty">The ATO office records your typed name, the time and your network address with this decision. Requesting changes sends the packet back to the department administrator with your note.</p>
+          </section>
+        </sc-if>
+      </sc-if>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { st:'loading', data:null, name:'', note:'', err:'', busy:false, closedMsg:null };
+  token(){ try{ return new URLSearchParams(location.search).get('t') || new URLSearchParams(location.hash.slice(1)).get('t') || ''; }catch(e){ return ''; } }
+  componentDidMount(){ this.load(); }
+  load = async () => {
+    const St = window.ATOStore; const t = this.token();
+    if(!t){ this.setState({ st:'invalid' }); return; }
+    if(!St || !St.getApproval){ this.setState({ st:'error', closedMsg:'The approval service did not load. Reload the page.' }); return; }
+    try{ const d = await St.getApproval(t); this.setState({ st:d.state || 'invalid', data:d }); }
+    catch(e){ this.setState({ st:'error', closedMsg:String(e.message || e) }); }
+  };
+  submit = async (decision) => {
+    const s = this.state; if(s.busy) return;
+    if((s.name || '').trim().length < 3) return this.setState({ err:'Type your full name.' });
+    if(decision === 'changes' && !(s.note || '').trim()) return this.setState({ err:'Say what needs to change in the note.' });
+    this.setState({ busy:true, err:'' });
+    try{ await window.ATOStore.submitApproval(this.token(), decision, s.name.trim(), (s.note || '').trim()); await this.load(); this.setState({ busy:false }); }
+    catch(e){ this.setState({ busy:false, err:String(e.message || e) }); }
+  };
+  fmt(d){ if(!d) return '—'; const x = new Date(String(d).length === 10 ? d + 'T00:00:00' : d); return isNaN(x) ? d : x.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+  renderVals(){
+    const s = this.state, d = s.data || {}, p = d.packet || null, sg = d.signer || {}, dec = d.decision || {};
+    const closed = { invalid:['Link not valid','This approval link no longer works.','It may have been used already, replaced by a newer reminder email, or cancelled because the packet changed. Use the most recent email from the ATO office, or contact the office for a new link.'],
+      expired:['Link expired','This approval link has expired.','Approval links last 30 days. Contact the ATO office and they will send a new one.'],
+      error:['Something went wrong','The packet could not be loaded.', s.closedMsg || 'Reload the page and try again.'] }[s.st];
+    const TT = { postdoc:'Postdoctoral scholar', gsr:'Graduate student researcher', student:'Graduate student researcher', predoc:'Predoctoral scholar' };
+    const facts = p ? [['Trainee', p.trainee], ['Trainee type', TT[p.trainee_type] || p.trainee_type], ['Department', p.dept], ['Title code', p.title + (p.supplement ? ' (with supplement)' : '')],
+      ['Form', p.form], ['Start', this.fmt(p.start)], ['End', this.fmt(p.end)], ['FTE', p.fte != null ? p.fte + '%' : ''], ['Principal investigator', p.pi], ['Faculty mentor', p.mentor], ['Research title', p.research]]
+      .filter(x => x[1] && x[1] !== '—' || x[0] === 'Start' || x[0] === 'End').map(x => ({ k:x[0], v:x[1] || '—' })) : [];
+    const lines = p ? p.lines.map((l, i) => ({ fau:l.fau || '—', pct:l.pct != null ? l.pct + '%' : '', dates:(l.start || l.end) ? this.fmt(l.start) + ' – ' + this.fmt(l.end) : '', fm:l.fm ? 'FM: ' + l.fm : '', bg:i % 2 ? '#fff' : '#f9fbfc' })) : [];
+    const docs = p ? p.docs.map(x => ({ label:x.label, mark:x.present ? '✓' : '', bd:x.present ? '#2774ae' : '#d8a59a', bg:x.present ? '#2774ae' : '#fff', fg:x.present ? '#2f4451' : '#a3543f', state:x.present ? 'attached' : 'not attached' })) : [];
+    const checks = p ? p.checks : []; const issues = checks.filter(v => !v.passed).map(v => ({ message:v.message, dot:v.severity === 'blocking' ? '#a33a2f' : '#a0742a' }));
+    const RS = { submitted:['Submitted','✓'], validated:['Validated','✓'], approved:['Approved','✓'], sent:['Waiting','·'], missing:['Waiting','·'], waiting:['Not yet',''], changes:['Changes requested','!'], later:['After approvals',''] };
+    const route = (d.route || []).map(r => { const m = RS[r.status] || [r.status, '']; const ok = m[1] === '✓';
+      return { label:r.label + (r.me ? ' (you)' : ''), name:r.name || '—', status:m[0], mark:m[1], bg:r.me ? '#eef5fb' : 'transparent',
+        bd:ok ? '#2774ae' : (r.status === 'changes' ? '#a0742a' : '#cfdae4'), dotBg:ok ? '#2774ae' : '#fff', dotFg:ok ? '#fff' : '#a0742a', fg:ok ? '#2e6b48' : (r.me ? '#2774ae' : '#7f93a1') }; });
+    const approved = dec.status === 'approved';
+    return {
+      isLoading:s.st === 'loading', isClosed:!!closed, closedEyebrow:closed ? closed[0] : '', closedTitle:closed ? closed[1] : '', closedBody:closed ? closed[2] : '',
+      hasPacket:!!p && (s.st === 'open' || s.st === 'done'), isOpen:s.st === 'open', isDone:s.st === 'done',
+      eyebrow:s.st === 'done' ? 'Approval recorded' : 'Approval requested · ' + (sg.label || 'Approver'),
+      headline:p ? p.type + (p.trainee ? ' for ' + p.trainee : '') : '',
+      intro:p ? 'Hello ' + (sg.name || '') + '. The ATO office asks you to review this packet as ' + (sg.label || 'an approver') + '. It was submitted by ' + (p.submitter || 'the department') + (p.submitted ? ' on ' + this.fmt(p.submitted) : '') + ' and has passed ATO validation.' : '',
+      chips:p ? [p.id, p.form, p.title].filter(Boolean) : [],
+      doneTitle:approved ? 'You approved this packet' : 'You requested changes',
+      doneBody:(dec.at ? this.fmt(dec.at) + ' · ' : '') + 'signed “' + (dec.signed_name || '') + '”' + (dec.note ? '. Note: “' + dec.note + '”' : '') + '. Nothing else is needed from you. You can close this page.',
+      doneBg:approved ? '#eef7f1' : '#fbf5ea', doneBd:approved ? '#cfe5d7' : '#ead8b5', doneFg:approved ? '#2e6b48' : '#80591c',
+      facts, lines, noLines:lines.length === 0, fundCount:lines.length ? lines.length + ' line' + (lines.length === 1 ? '' : 's') : '',
+      docs, noDocs:docs.length === 0, route, issues, hasIssues:issues.length > 0, checkSummary:(checks.length - issues.length) + ' of ' + checks.length + ' passed',
+      decisionIntro:'Approve as ' + (sg.label || 'approver') + ', or request changes. Approving passes the packet to the next approver on the route.',
+      name:s.name, note:s.note, err:s.err, hasErr:!!s.err, approveLabel:s.busy ? 'Saving…' : 'Approve',
+      onName:(e) => this.setState({ name:e.target.value, err:'' }), onNote:(e) => this.setState({ note:e.target.value, err:'' }),
+      approve:() => this.submit('approve'), changes:() => this.submit('changes')
+    };
+  }
+}
+</script>
+</body>
+</html>

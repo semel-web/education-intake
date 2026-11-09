@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="robots" content="noindex, nofollow">
+<script>window.ATO_WP = { root: '' };</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;background:#eef3f7;color:#12303f;-webkit-font-smoothing:antialiased}
+  a{color:#2774ae;text-decoration:none}
+  a:hover{color:#005587}
+  input,select,textarea,button{font-family:inherit}
+  ::placeholder{color:#a6b6c2}
+  input:focus,textarea:focus,select:focus{outline:none}
+  @keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .om-scroll::-webkit-scrollbar{width:10px;height:10px}
+  .om-scroll::-webkit-scrollbar-thumb{background:#cfdae4;border-radius:6px;border:2px solid #eef3f7}
+</style>
+<script src="./ato-store.js"></script>
+</helmet>
+
+<div style="height:100vh;display:flex;flex-direction:column;overflow:hidden">
+
+  <div style="background:#003b5c;color:#eaf3fa;display:flex;align-items:center;justify-content:center;gap:13px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;flex:none">
+    <span style="width:8px;height:8px;background:#ffc72c;border-radius:50%;flex:none"></span>
+    <span style="font-weight:600;color:#ffd76b">PROTOTYPE — SAMPLE DATA ONLY</span>
+    <span style="opacity:.7;letter-spacing:.04em;text-transform:none;font-size:11px">No SSN or regulated identifier is ever collected, stored, or transmitted.</span>
+  </div>
+
+  <header style="flex:none;background:#fff;border-bottom:1px solid #dde7ef;display:flex;align-items:center;gap:20px;padding:12px 26px">
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer" onClick="{{ goHome }}">
+      <div style="width:38px;height:38px;border-radius:9px;background:#003b5c;color:#ffc72c;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:.02em;flex:none">ATO</div>
+      <div style="line-height:1.15">
+        <div style="font-weight:800;font-size:16px;color:#003b5c;letter-spacing:-.01em">Academic Trainee Office</div>
+        <div style="font-size:11.5px;color:#7f93a1;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em">Operations Console · Semel Institute</div>
+      </div>
+    </div>
+    <sc-if value="{{ isStaff }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;max-width:440px;margin-left:8px;position:relative">
+      <input value="{{ search }}" onInput="{{ onSearch }}" placeholder="Search — name, ID, title code, PI, signer, FAU…" style="width:100%;padding:10px 13px 10px 34px;border:1.5px solid #dde7ef;border-radius:10px;font-size:13.5px;background:#f7fafc" style-focus="border-color:#2774ae;background:#fff">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9fb1bd;font-size:14px">⌕</span>
+    </div>
+    </sc-if>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:16px">
+      <sc-if value="{{ isStaff }}" hint-placeholder-val="{{ false }}"><span title="{{ liveTitle }}" style="display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.03em;color:{{ liveFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ liveDot }};flex:none"></span>{{ liveLabel }}</span></sc-if>
+      <sc-if value="{{ isStaff }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onSettings }}" style="background:none;border:none;cursor:pointer;font-size:13px;font-weight:600;color:{{ settingsColor }};display:flex;align-items:center;gap:7px;padding:6px 4px" style-hover="color:#003b5c">Settings</button></sc-if>
+      <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;border-left:1px solid #e6eef5;padding-left:16px">
+          <div style="text-align:right;line-height:1.2">
+            <div style="font-size:13px;font-weight:700;color:#003b5c;white-space:nowrap">{{ userName }}</div>
+            <button onClick="{{ signOut }}" style="background:none;border:none;padding:0;font-size:11.5px;font-weight:600;color:#7f93a1;cursor:pointer" style-hover="color:#a3543f">Sign out</button>
+          </div>
+          <div style="width:34px;height:34px;border-radius:50%;background:#e5eff8;color:#2774ae;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex:none">{{ userInitials }}</div>
+        </div>
+      </sc-if>
+    </div>
+  </header>
+
+  <sc-if value="{{ needAuth }}" hint-placeholder-val="{{ false }}">
+    <div class="om-scroll" style="flex:1;overflow-y:auto;padding:56px 24px">
+        <div style="max-width:440px;margin:0 auto;animation:fadeup .3s ease both;background:#fff;border:1px solid #dbe4ec;border-radius:18px;padding:30px 30px 26px;box-shadow:0 18px 44px -30px rgba(0,59,92,.55)">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#2774ae;margin-bottom:10px;font-weight:600">ATO office · console</div>
+          <h1 style="font-weight:700;font-size:25px;line-height:1.2;letter-spacing:-.01em;margin:0 0 8px;color:#003b5c">{{ authTitle }}</h1>
+          <p style="font-size:13.5px;line-height:1.55;color:#5b6f7d;margin:0 0 22px;text-wrap:pretty">{{ authSub }}</p>
+          <sc-if value="{{ authChecking }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13.5px;color:#5b6f7d;padding:6px 0 4px">Checking your sign-in…</div>
+          </sc-if>
+          <sc-if value="{{ authSso }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ authSsoGo }}" style="width:100%;font-size:14px;font-weight:700;color:#fff;background:#2774ae;border:none;border-radius:10px;padding:12px 16px;cursor:pointer" style-hover="background:#005587">{{ authSsoLabel }}</button>
+          </sc-if>
+          <sc-if value="{{ authShowOr }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;margin:16px 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7f93a1"><span style="flex:1;height:1px;background:#eef2f6"></span><span>or use a site account</span><span style="flex:1;height:1px;background:#eef2f6"></span></div>
+          </sc-if>
+          <sc-if value="{{ authPwOn }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ authSubmit }}" style="display:flex;flex-direction:column;gap:14px">
+            <sc-if value="{{ authIsUp }}" hint-placeholder-val="{{ false }}">
+              <div><label style="display:block;font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#7f93a1;margin-bottom:6px">Full name</label><input value="{{ authName }}" onInput="{{ onAuthName }}" autocomplete="name" style="width:100%;padding:11px 13px;border:1.5px solid #dbe4ec;border-radius:10px;font-size:14px;background:#f9fbfd" style-focus="border-color:#2774ae;background:#fff;outline:none"></div>
+              
+            </sc-if>
+            <div><label style="display:block;font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#7f93a1;margin-bottom:6px">Email</label><input type="email" value="{{ authEmail }}" onInput="{{ onAuthEmail }}" autocomplete="email" style="width:100%;padding:11px 13px;border:1.5px solid #dbe4ec;border-radius:10px;font-size:14px;background:#f9fbfd" style-focus="border-color:#2774ae;background:#fff;outline:none"></div>
+            <sc-if value="{{ authNeedsPw }}" hint-placeholder-val="{{ true }}">
+              <div><label style="display:block;font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:#7f93a1;margin-bottom:6px">Password</label><input type="password" value="{{ authPw }}" onInput="{{ onAuthPw }}" autocomplete="{{ authPwAuto }}" style="width:100%;padding:11px 13px;border:1.5px solid #dbe4ec;border-radius:10px;font-size:14px;background:#f9fbfd" style-focus="border-color:#2774ae;background:#fff;outline:none"></div>
+            </sc-if>
+            <sc-if value="{{ hasAuthErr }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fae4e0;border:1px solid #edc9c1;border-radius:10px;padding:10px 13px;font-size:12.5px;color:#a33a2f;line-height:1.45">{{ authErr }}</div>
+            </sc-if>
+            <sc-if value="{{ hasAuthMsg }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#e5f2ea;border:1px solid #b9dbc5;border-radius:10px;padding:10px 13px;font-size:12.5px;color:#23633e;line-height:1.45">{{ authMsg }}</div>
+            </sc-if>
+            <button type="submit" disabled="{{ authBusy }}" style="margin-top:4px;font-size:14px;font-weight:700;color:#fff;background:#2774ae;border:none;border-radius:10px;padding:12px 16px;cursor:pointer;opacity:{{ authBtnOpacity }}" style-hover="background:#005587">{{ authSubmitLabel }}</button>
+          </form>
+          <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;font-size:12.5px">
+            <sc-if value="{{ authSignupOn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ authAlt }}" style="background:none;border:none;padding:0;color:#2774ae;font-weight:600;cursor:pointer;font-size:12.5px">{{ authAltLabel }}</button></sc-if>
+            <sc-if value="{{ authIsIn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ authToReset }}" style="background:none;border:none;padding:0;color:#7f93a1;font-weight:600;cursor:pointer;font-size:12.5px">Forgot password?</button></sc-if>
+          </div>
+          </sc-if>
+          <div style="margin-top:20px;border-top:1px solid #eef2f6;padding-top:14px;font-size:12px;line-height:1.55;color:#7f93a1">Console access is limited to ATO office staff. If you sign in and see a no-access message, ask the pilot coordinator to add your email to the office list.</div>
+        </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ notStaff }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px">
+      <div style="max-width:460px;background:#fff;border:1px solid #dde7ef;border-radius:18px;padding:30px;animation:fadeup .3s ease both">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a3543f;margin-bottom:10px;font-weight:600">No console access</div>
+        <h1 style="font-weight:700;font-size:23px;line-height:1.25;margin:0 0 10px;color:#003b5c">{{ userEmail }} isn’t on the ATO office list</h1>
+        <p style="font-size:13.5px;line-height:1.55;color:#5b6f7d;margin:0 0 20px">The console is for ATO office staff. Department administrators submit and track packets in the intake. If you work in the office, ask the pilot coordinator to add this email.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="intake.html" style="font-size:13px;font-weight:700;color:#fff;background:#2774ae;border-radius:9px;padding:9px 15px">Go to the intake ›</a>
+          <button onClick="{{ signOut }}" style="font-size:13px;font-weight:700;color:#5b6f7d;background:#fff;border:1.5px solid #dde7ef;border-radius:9px;padding:8px 14px;cursor:pointer">Sign in as someone else</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ notLoaded }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#8195a3;font-family:'IBM Plex Mono',monospace;font-size:13px;animation:fadein .3s ease">Loading packet store…</div>
+  </sc-if>
+
+  <sc-if value="{{ loaded }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;min-height:0">
+
+    <!-- SIDEBAR -->
+    <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+    <aside class="om-scroll" style="flex:none;width:262px;background:#fff;border-right:1px solid #dde7ef;padding:18px 14px;overflow-y:auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:#a0aeba;font-weight:600;padding:4px 10px 10px">Work queues</div>
+      <div style="display:flex;flex-direction:column;gap:1px">
+        <sc-for list="{{ queues }}" as="q" hint-placeholder-count="8">
+          <button onClick="{{ q.onSelect }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:{{ q.bg }};border:none;border-left:2.5px solid {{ q.rule }};border-radius:0 8px 8px 0;padding:9px 11px;cursor:pointer" style-hover="background:#f2f7fb">
+            <span style="flex:1;font-size:13.5px;font-weight:{{ q.weight }};color:{{ q.fg }};line-height:1.25">{{ q.label }}</span>
+            <span style="flex:none;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:{{ q.countColor }}">{{ q.count }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid #eef3f7;margin:16px 10px 12px"></div>
+      <div style="padding:0 10px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:9px">This view</div>
+        <div style="font-size:12px;color:#7f93a1;line-height:1.5">{{ me_summary }}</div>
+      </div>
+    </aside>
+    </sc-if>
+
+    <!-- MAIN -->
+    <main class="om-scroll" style="flex:1;min-width:0;overflow-y:auto;padding:0 30px 60px">
+
+      <!-- QUEUE VIEW -->
+      <sc-if value="{{ isQueue }}" hint-placeholder-val="{{ true }}">
+        <div style="max-width:1080px;animation:fadeup .28s ease both">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:26px 0 4px">
+            <div>
+              <h1 style="font-weight:800;font-size:25px;margin:0;color:#003b5c;letter-spacing:-.01em">{{ q.label }}</h1>
+              <p style="font-size:14px;color:#5b6f7d;margin:6px 0 0;max-width:640px;line-height:1.5">{{ q.desc }}</p>
+            </div>
+            <div style="text-align:right;flex:none">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:#003b5c;line-height:1">{{ q.count }}</div>
+              <div style="font-size:11px;color:#93a6b3;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">{{ q.countNoun }}</div>
+            </div>
+          </div>
+
+          <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:14px;background:#003b5c;color:#eaf3fa;border-radius:11px;padding:10px 16px;margin:16px 0 0;animation:fadeup .2s ease both">
+              <span style="font-size:13px;font-weight:600">{{ selCount }} selected</span>
+              <div style="width:1px;height:16px;background:rgba(255,255,255,.2)"></div>
+              <button onClick="{{ bulkPrimary }}" style="background:#fff;border:none;color:#003b5c;font-size:13px;font-weight:700;cursor:pointer;padding:7px 14px;border-radius:8px;white-space:nowrap" style-hover="background:#dcecf8">{{ bulkPrimaryLabel }}</button>
+              <sc-if value="{{ showBulkRemind }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bulkRemind }}" style="background:none;border:none;color:#cfe4f5;font-size:13px;font-weight:600;cursor:pointer;padding:4px;white-space:nowrap" style-hover="color:#fff">Send reminder</button></sc-if>
+              <sc-if value="{{ showBulkAssign }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bulkReassign }}" style="background:none;border:none;color:#cfe4f5;font-size:13px;font-weight:600;cursor:pointer;padding:4px;white-space:nowrap" style-hover="color:#fff">Assign to me</button></sc-if>
+              <button onClick="{{ bulkExport }}" style="background:none;border:none;color:#cfe4f5;font-size:13px;font-weight:600;cursor:pointer;padding:4px;white-space:nowrap" style-hover="color:#fff">Export to Box</button>
+              <button onClick="{{ clearSel }}" style="margin-left:auto;background:none;border:none;color:#9fc0da;font-size:12px;cursor:pointer;padding:4px" style-hover="color:#fff">Clear</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasChips }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-right:2px">{{ chipLabel }}</span>
+              <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+                <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:7px;background:{{ c.bg }};border:1px solid {{ c.bd }};border-radius:999px;padding:5px 12px;cursor:pointer;font-size:12.5px;font-weight:{{ c.weight }};color:{{ c.fg }}" style-hover="border-color:#b7cadb">
+                  <span>{{ c.name }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ c.countFg }}">{{ c.count }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <div style="background:#fff;border:1px solid #dde7ef;border-radius:14px;margin-top:18px;overflow:clip;box-shadow:0 14px 40px -30px rgba(0,59,92,.5)">
+            <div style="display:grid;grid-template-columns:28px 1.4fr 1.2fr 80px 1.35fr 92px;gap:14px;padding:11px 18px;position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid #eef3f7;box-shadow:0 -10px 0 0 #eef3f7;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#a0aeba;font-weight:600">
+              <span></span><span>Trainee</span><span>Packet</span><span>Title</span><span>{{ q.colState }}</span><span style="text-align:right">{{ q.colDate }}</span>
+            </div>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:28px 1.4fr 1.2fr 80px 1.35fr 92px;gap:14px;padding:12px 18px;min-height:58px;box-sizing:border-box;border-bottom:1px solid #f2f6f9;align-items:center;cursor:pointer;background:{{ r.rowBg }}" style-hover="background:#f7fafc" onClick="{{ r.onOpen }}">
+                <span onClick="{{ r.onToggleSel }}" style="width:17px;height:17px;border:1.5px solid {{ r.checkBd }};border-radius:5px;background:{{ r.checkBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800">{{ r.checkMark }}</span>
+                <div style="min-width:0">
+                  <div style="font-size:14px;font-weight:700;color:#12303f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9fb1bd;margin-top:2px">{{ r.pid }}</div>
+                </div>
+                <div style="min-width:0">
+                  <div style="font-size:13px;color:#3a4f5c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.typeLabel }}</div>
+                  <div style="font-size:11px;color:#93a6b3;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</div>
+                </div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#2f4451;font-weight:500">{{ r.title }}</div>
+                <div style="min-width:0">
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }};flex:none"></span>
+                    <span style="font-size:12.5px;color:#3a4f5c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.statusLabel }}</span>
+                  </div>
+                  <sc-if value="{{ r.urgentText }}" hint-placeholder-val=""><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:{{ r.urgentColor }};margin-top:3px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.urgentText }}</div></sc-if>
+                </div>
+                <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b6f7d">{{ r.date }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:46px 18px;text-align:center;color:#9fb1bd;font-size:13.5px">{{ emptyMsg }}</div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- DETAIL VIEW -->
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:1000px;animation:fadeup .28s ease both;padding-top:26px">
+          <button onClick="{{ backToQueue }}" style="background:none;border:none;color:#5b6f7d;font-size:13px;font-weight:600;cursor:pointer;padding:2px 0;margin-bottom:14px" style-hover="color:#003b5c">‹ {{ backLabel }}</button>
+
+          <!-- Header -->
+          <div style="background:#fff;border:1px solid #dde7ef;border-radius:16px;padding:24px 26px;box-shadow:0 14px 40px -30px rgba(0,59,92,.5)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap">
+              <div style="min-width:0">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9fb1bd;letter-spacing:.03em">{{ det.pid }}</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:#cfdae4"></span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9fb1bd">{{ det.origin }}</span>
+                </div>
+                <h1 style="font-weight:800;font-size:26px;margin:0;color:#003b5c;letter-spacing:-.01em">{{ det.name }}</h1>
+                <p style="font-size:14px;color:#5b6f7d;margin:8px 0 0;line-height:1.5;max-width:620px">{{ det.oneLiner }}</p>
+              </div>
+              <div style="text-align:right;flex:none">
+                <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #dde7ef;border-radius:9px;padding:7px 12px">
+                  <span style="width:8px;height:8px;border-radius:50%;background:{{ det.statusDot }}"></span>
+                  <span style="font-weight:700;font-size:13.5px;color:#003b5c">{{ det.statusLabel }}</span>
+                </div>
+                <div style="font-size:11.5px;color:#93a6b3;margin-top:7px;font-family:'IBM Plex Mono',monospace">{{ det.daysInState }} · {{ det.analystName }}</div>
+              </div>
+            </div>
+
+            <!-- progress strip -->
+            <div style="display:flex;align-items:center;gap:0;margin-top:22px;overflow:hidden">
+              <sc-for list="{{ det.life }}" as="s" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;flex:1;min-width:0">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:none">
+                    <span style="width:13px;height:13px;border-radius:50%;background:{{ s.dotBg }};border:2px solid {{ s.dotBd }};flex:none"></span>
+                  </div>
+                  <div style="flex:1;height:2px;background:{{ s.lineBg }};min-width:8px"></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:0;margin-top:6px">
+              <sc-for list="{{ det.life }}" as="s" hint-placeholder-count="6">
+                <div style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.02em;text-transform:uppercase;color:{{ s.txt }};font-weight:{{ s.weight }};line-height:1.2">{{ s.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- ACTION BAR -->
+          <div data-actionbar="1" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;top:0;z-index:6;background:#eef3f7;padding:16px 0 12px;box-shadow:0 -10px 0 0 #eef3f7, 0 12px 16px -16px rgba(0,59,92,.55)">
+            <sc-if value="{{ det.canAdvance }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ det.onAdvance }}" style="font-size:13.5px;font-weight:700;color:#fff;background:#2774ae;border:none;border-radius:10px;padding:11px 20px;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#005587">{{ det.advanceLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ det.advanceBlocked }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12.5px;color:#a0742a;font-weight:600;background:#fbf5ea;border:1px solid #ecdcbf;border-radius:10px;padding:10px 15px;flex:none;white-space:nowrap">{{ det.advanceBlockedText }}</div>
+            </sc-if>
+            <sc-if value="{{ det.canReturn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ det.onReturn }}" style="font-size:13.5px;font-weight:600;color:#3a4f5c;background:#fff;border:1.5px solid #dde7ef;border-radius:10px;padding:10px 17px;cursor:pointer;flex:none;white-space:nowrap" style-hover="border-color:#b7cadb">Return for correction</button></sc-if>
+            <button onClick="{{ det.onEmail }}" style="font-size:13.5px;font-weight:600;color:#3a4f5c;background:#fff;border:1.5px solid #dde7ef;border-radius:10px;padding:10px 17px;cursor:pointer;flex:none;white-space:nowrap" style-hover="border-color:#b7cadb">Email preparer</button>
+            <button onClick="{{ det.onReminder }}" style="font-size:13.5px;font-weight:600;color:#3a4f5c;background:#fff;border:1.5px solid #dde7ef;border-radius:10px;padding:10px 17px;cursor:pointer;flex:none;white-space:nowrap" style-hover="border-color:#b7cadb">Send reminder</button>
+            <button onClick="{{ det.onReassign }}" style="font-size:13.5px;font-weight:600;color:#3a4f5c;background:#fff;border:1.5px solid #dde7ef;border-radius:10px;padding:10px 17px;cursor:pointer;flex:none;white-space:nowrap" style-hover="border-color:#b7cadb">Reassign</button>
+            <sc-if value="{{ det.lastReminded }}" hint-placeholder-val=""><span style="font-size:11.5px;color:#93a6b3;font-family:'IBM Plex Mono',monospace;margin-left:2px">{{ det.lastReminded }}</span></sc-if>
+          </div>
+
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;margin-top:18px;align-items:start">
+            <!-- LEFT column -->
+            <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+
+              <!-- Appointment facts -->
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:20px 22px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:14px">Appointment</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 22px">
+                  <sc-for list="{{ det.facts }}" as="f" hint-placeholder-count="6">
+                    <div style="min-width:0">
+                      <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:3px">{{ f.k }}</div>
+                      <div style="font-size:14px;color:#2f4451;font-weight:600">{{ f.v }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+
+              <!-- Funding -->
+              <sc-if value="{{ det.hasFunding }}" hint-placeholder-val="{{ false }}">
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:20px 22px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600">Funding lines</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#93a6b3">{{ det.fundNote }}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ det.funding }}" as="fl" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:14px;padding:11px 13px;border:1px solid #eef3f7;border-radius:10px;background:#f9fbfc">
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#12303f;font-weight:500">{{ fl.fau }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#93a6b3">{{ fl.pct }}</span>
+                      <span style="flex:1;font-size:12.5px;color:#5b6f7d;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ fl.fmName }}</span>
+                      <span style="display:flex;align-items:center;gap:6px;flex:none"><span style="width:6px;height:6px;border-radius:50%;background:{{ fl.dot }}"></span><span style="font-size:12px;color:#5b6f7d">{{ fl.statusText }}</span></span>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+              </sc-if>
+
+              <!-- Signature route -->
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:20px 22px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:14px">Approval route</div>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ det.sig }}" as="s" hint-placeholder-count="5">
+                    <div style="display:flex;align-items:center;gap:13px;padding:9px 2px;border-bottom:1px solid #f4f7fa">
+                      <span style="width:22px;height:22px;border-radius:50%;background:{{ s.badgeBg }};color:{{ s.badgeFg }};border:1.5px solid {{ s.badgeBd }};display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;flex:none">{{ s.n }}</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:13.5px;color:#2f4451;font-weight:600">{{ s.roleLabel }}</div>
+                        <div style="font-size:12px;color:#93a6b3">{{ s.signer }}</div>
+                        <sc-if value="{{ s.hasActs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px"><sc-for list="{{ s.acts }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.onClick }}" style="font-size:11.5px;font-weight:600;color:#2774ae;background:#f3f8fc;border:1px solid #cfe0ee;border-radius:7px;padding:4px 9px;cursor:pointer" style-hover="border-color:#2774ae">{{ a.label }}</button></sc-for></div></sc-if>
+                      </div>
+                      <div style="text-align:right;flex:none">
+                        <div style="font-size:12.5px;color:{{ s.statusColor }};font-weight:600">{{ s.statusText }}</div>
+                        <sc-if value="{{ s.sub }}" hint-placeholder-val=""><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:{{ s.subColor }};margin-top:1px">{{ s.sub }}</div></sc-if>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+
+              <!-- Execution checklist (Layer 5) -->
+              <sc-if value="{{ det.showExec }}" hint-placeholder-val="{{ false }}">
+              <section style="background:#fff;border:1px solid #cfe0ee;border-radius:14px;padding:20px 22px;box-shadow:0 0 0 3px #f3f8fc">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#2774ae;font-weight:600">Execution handoff</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#93a6b3">{{ det.execCount }}</div>
+                </div>
+                <p style="font-size:12.5px;color:#8195a3;margin:0 0 14px;line-height:1.5">The work that happens in other UCLA systems. Check each off as it's done — it writes to the event history. The packet isn't complete until this is.</p>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ det.exec }}" as="e" hint-placeholder-count="4">
+                    <button onClick="{{ e.onToggle }}" style="display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;background:{{ e.bg }};border:1px solid {{ e.bd }};border-radius:10px;padding:12px 14px;cursor:pointer" style-hover="border-color:#b7cadb">
+                      <span style="width:19px;height:19px;border-radius:6px;border:1.5px solid {{ e.boxBd }};background:{{ e.boxBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none;margin-top:1px">{{ e.mark }}</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:13.5px;color:{{ e.labelColor }};font-weight:600">{{ e.label }}</div>
+                        <sc-if value="{{ e.meta }}" hint-placeholder-val=""><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#93a6b3;margin-top:3px">{{ e.meta }}</div></sc-if>
+                      </div>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#b7c4ce;flex:none;margin-top:3px">{{ e.system }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </section>
+              </sc-if>
+
+              <!-- Event history -->
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:20px 22px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:16px">Event history</div>
+                <div style="display:flex;flex-direction:column">
+                  <sc-for list="{{ det.events }}" as="ev" hint-placeholder-count="5">
+                    <div style="display:flex;gap:14px">
+                      <div style="display:flex;flex-direction:column;align-items:center;flex:none">
+                        <span style="width:9px;height:9px;border-radius:50%;background:{{ ev.dot }};border:2px solid #fff;box-shadow:0 0 0 1.5px {{ ev.ring }};flex:none;margin-top:3px"></span>
+                        <span style="flex:1;width:1.5px;background:#eef3f7;min-height:14px"></span>
+                      </div>
+                      <div style="padding-bottom:14px;min-width:0">
+                        <div style="font-size:13px;color:#2f4451;line-height:1.4"><span style="font-weight:600">{{ ev.text }}</span></div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9fb1bd;margin-top:2px">{{ ev.meta }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+            </div>
+
+            <!-- RIGHT column -->
+            <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+              <!-- Attachments -->
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:18px 20px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:13px">Attachments</div>
+                <sc-if value="{{ det.hasAtts }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ det.atts }}" as="a" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                      <span style="width:15px;height:15px;border-radius:4px;border:1.5px solid {{ a.bd }};background:{{ a.bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex:none;margin-top:1px">{{ a.mark }}</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:13px;color:{{ a.color }};line-height:1.35">{{ a.label }}</div>
+                        <div style="font-size:10.5px;color:#9fb1bd;font-family:'IBM Plex Mono',monospace;margin-top:1px">{{ a.statusText }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                </sc-if>
+                <sc-if value="{{ det.noAtts }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#9fb1bd;line-height:1.5">{{ det.noAttsMsg }}</div></sc-if>
+              </section>
+
+              <!-- Validation -->
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:18px 20px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:13px">Validation</div>
+                <sc-if value="{{ det.hasVals }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <sc-for list="{{ det.vals }}" as="v" hint-placeholder-count="3">
+                    <div>
+                      <div style="display:flex;align-items:center;gap:9px">
+                        <span style="width:7px;height:7px;border-radius:50%;background:{{ v.dot }};flex:none"></span>
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7f93a1;font-weight:600">{{ v.rule }}</span>
+                        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:{{ v.sevColor }};font-weight:600">{{ v.sev }}</span>
+                      </div>
+                      <div style="font-size:12.5px;color:#5b6f7d;line-height:1.4;margin:4px 0 0 16px">{{ v.message }}</div>
+                      <sc-if value="{{ v.canOverride }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.onOverride }}" style="margin:6px 0 0 16px;background:none;border:none;color:#2774ae;font-size:11.5px;font-weight:600;cursor:pointer;padding:0" style-hover="color:#005587">Override with reason →</button></sc-if>
+                      <sc-if value="{{ v.overridden }}" hint-placeholder-val=""><div style="margin:5px 0 0 16px;font-size:11px;color:#8195a3;font-family:'IBM Plex Mono',monospace">{{ v.overridden }}</div></sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+                </sc-if>
+                <sc-if value="{{ det.noVals }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#9fb1bd;line-height:1.5">{{ det.noValsMsg }}</div></sc-if>
+              </section>
+
+              <!-- People -->
+              <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:18px 20px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:13px">People</div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ det.people }}" as="p" hint-placeholder-count="3">
+                    <div style="min-width:0">
+                      <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:2px">{{ p.role }}</div>
+                      <div style="font-size:13.5px;color:#2f4451;font-weight:600">{{ p.name }}</div>
+                      <div style="font-size:11.5px;color:#93a6b3;font-family:'IBM Plex Mono',monospace">{{ p.email }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- SETTINGS VIEW -->
+      <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:820px;animation:fadeup .28s ease both;padding-top:26px">
+          <button onClick="{{ backToQueue }}" style="background:none;border:none;color:#5b6f7d;font-size:13px;font-weight:600;cursor:pointer;padding:2px 0;margin-bottom:14px" style-hover="color:#003b5c">‹ Back to queues</button>
+          <h1 style="font-weight:800;font-size:25px;margin:0;color:#003b5c;letter-spacing:-.01em">Reminder policy</h1>
+          <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:18px 24px;margin:18px 0 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+            <div style="flex:1;min-width:260px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:8px">Shared test data</div>
+              <div style="font-size:13.5px;color:#2f4451;line-height:1.5">{{ liveSummary }}</div>
+            </div>
+            <button onClick="{{ onResetShared }}" style="flex:none;font-size:13px;font-weight:700;color:#a3543f;background:#fff;border:1.5px solid #e6c8bf;border-radius:9px;padding:9px 15px;cursor:pointer" style-hover="background:#fbf1ee">Reset shared test data</button>
+          </section>
+          <p style="font-size:14px;color:#5b6f7d;margin:6px 0 22px;max-width:640px;line-height:1.5">Set once, applied system-wide. The scheduler pushes reminders on this cadence without anyone clicking. Per-packet overrides can come later.</p>
+
+          <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:22px 24px;margin-bottom:18px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:16px">Cadence &amp; thresholds</div>
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <sc-for list="{{ setRows }}" as="s" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid #f2f6f9">
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:14px;color:#2f4451;font-weight:600">{{ s.label }}</div>
+                    <div style="font-size:12px;color:#93a6b3;margin-top:2px;line-height:1.4">{{ s.help }}</div>
+                  </div>
+                  <input value="{{ s.value }}" onInput="{{ s.onInput }}" style="flex:none;width:150px;padding:9px 12px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13px;font-family:'IBM Plex Mono',monospace;background:#f7fafc;text-align:right" style-focus="border-color:#2774ae;background:#fff">
+                </div>
+              </sc-for>
+            </div>
+          </section>
+
+          <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:22px 24px;margin-bottom:18px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:14px">Which reminders fire automatically</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ autoRows }}" as="a" hint-placeholder-count="4">
+                <button onClick="{{ a.onToggle }}" style="display:flex;align-items:center;gap:13px;text-align:left;width:100%;background:none;border:none;cursor:pointer;padding:4px 0">
+                  <span style="width:38px;height:22px;border-radius:12px;background:{{ a.trackBg }};flex:none;position:relative;transition:background .2s"><span style="position:absolute;top:2px;left:{{ a.knobLeft }};width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s"></span></span>
+                  <span style="flex:1;font-size:13.5px;color:#2f4451;font-weight:600">{{ a.label }}</span>
+                  <span style="font-size:12px;color:#93a6b3;font-family:'IBM Plex Mono',monospace">{{ a.state }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+
+          <section style="background:#fff;border:1px solid #dde7ef;border-radius:14px;padding:22px 24px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#a0aeba;font-weight:600;margin-bottom:6px">Message templates</div>
+            <p style="font-size:12.5px;color:#8195a3;margin:0 0 16px;line-height:1.5">Use <span style="font-family:'IBM Plex Mono',monospace;color:#5b6f7d">{{token}}</span> merge fields — trainee, packet_id, days_remaining, needed. The office writes the words; the system fills the busywork.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+              <sc-for list="{{ tplTabs }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.onSelect }}" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;color:{{ t.fg }};background:{{ t.bg }};border:1.5px solid {{ t.bd }};border-radius:8px;padding:7px 12px;cursor:pointer" style-hover="border-color:#b7cadb">{{ t.label }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-bottom:12px">
+              <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:5px">Subject</div>
+              <input value="{{ tplSubject }}" onInput="{{ onTplSubject }}" style="width:100%;padding:10px 13px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13.5px;background:#f7fafc" style-focus="border-color:#2774ae;background:#fff">
+            </div>
+            <div>
+              <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:5px">Body</div>
+              <textarea value="{{ tplBody }}" onInput="{{ onTplBody }}" rows="6" style="width:100%;padding:12px 13px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13.5px;line-height:1.6;background:#f7fafc;resize:vertical" style-focus="border-color:#2774ae;background:#fff"></textarea>
+            </div>
+          </section>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+  </sc-if>
+
+  <!-- MODAL -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:rgba(6,28,42,.42);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:26px;z-index:50;animation:fadein .18s ease both" onClick="{{ closeModal }}">
+      <div onClick="{{ stop }}" style="background:#fff;border-radius:16px;width:100%;max-width:{{ modalWidth }};box-shadow:0 40px 90px -30px rgba(0,20,40,.5);animation:fadeup .22s ease both;overflow:hidden">
+        <div style="padding:20px 24px;border-bottom:1px solid #eef3f7;display:flex;align-items:center;justify-content:space-between">
+          <h3 style="margin:0;font-size:17px;font-weight:800;color:#003b5c">{{ modalTitle }}</h3>
+          <button onClick="{{ closeModal }}" style="background:none;border:none;color:#9fb1bd;font-size:22px;cursor:pointer;line-height:1;padding:0 2px" style-hover="color:#5b6f7d">×</button>
+        </div>
+        <div style="padding:22px 24px">
+
+          <!-- EMAIL / REMINDER composer -->
+          <sc-if value="{{ isCompose }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#9fb1bd">To</span>
+              <span style="font-size:13.5px;color:#2f4451;font-weight:600">{{ cmpTo }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#93a6b3">{{ cmpToEmail }}</span>
+            </div>
+            <sc-if value="{{ cmpHasTemplates }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+              <sc-for list="{{ cmpTemplates }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.onPick }}" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:{{ t.fg }};background:{{ t.bg }};border:1.5px solid {{ t.bd }};border-radius:8px;padding:6px 11px;cursor:pointer" style-hover="border-color:#b7cadb">{{ t.label }}</button>
+              </sc-for>
+            </div>
+            </sc-if>
+            <div style="margin-bottom:13px">
+              <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:5px">Subject</div>
+              <input value="{{ cmpSubject }}" onInput="{{ onCmpSubject }}" style="width:100%;padding:10px 13px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13.5px;background:#f7fafc" style-focus="border-color:#2774ae;background:#fff">
+            </div>
+            <div style="margin-bottom:6px">
+              <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:5px">Message</div>
+              <textarea value="{{ cmpBody }}" onInput="{{ onCmpBody }}" rows="8" style="width:100%;padding:12px 13px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13.5px;line-height:1.6;background:#f7fafc;resize:vertical" style-focus="border-color:#2774ae;background:#fff"></textarea>
+            </div>
+            <p style="font-size:11.5px;color:#9fb1bd;margin:8px 0 0;line-height:1.5">Sending logs the full message to this packet's event history — subject, body, recipient, timestamp, sender. No off-system email, no lost thread.</p>
+          </sc-if>
+
+          <!-- RETURN -->
+          <sc-if value="{{ isReturn }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:13.5px;color:#5b6f7d;margin:0 0 14px;line-height:1.55">Bounce this packet back to the preparer. It lands in <span style="font-weight:600;color:#2f4451">Returned</span> with your note attached; they fix and resubmit.</p>
+            <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:5px">What needs correcting (required)</div>
+            <textarea value="{{ rtnNote }}" onInput="{{ onRtnNote }}" rows="5" placeholder="e.g. Fellowship FAU must begin with 78 or 43 — line 1 starts with 44." style="width:100%;padding:12px 13px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13.5px;line-height:1.6;background:#f7fafc;resize:vertical" style-focus="border-color:#2774ae;background:#fff"></textarea>
+          </sc-if>
+
+          <!-- REASSIGN -->
+          <sc-if value="{{ isReassign }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:13.5px;color:#5b6f7d;margin:0 0 14px;line-height:1.55">Hand this packet to another ATO analyst.</p>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ reassignOpts }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.onPick }}" style="display:flex;align-items:center;gap:11px;text-align:left;width:100%;background:{{ o.bg }};border:1.5px solid {{ o.bd }};border-radius:10px;padding:12px 14px;cursor:pointer" style-hover="border-color:#b7cadb">
+                  <span style="width:30px;height:30px;border-radius:50%;background:#e5eff8;color:#2774ae;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none">{{ o.initials }}</span>
+                  <span style="flex:1;font-size:14px;color:#2f4451;font-weight:600">{{ o.name }}</span>
+                  <sc-if value="{{ o.current }}" hint-placeholder-val=""><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#93a6b3">Current</span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- OVERRIDE -->
+          <sc-if value="{{ isOverride }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:13.5px;color:#5b6f7d;margin:0 0 6px;line-height:1.55">Override <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2f4451">{{ ovRule }}</span> — {{ ovMessage }}</p>
+            <p style="font-size:12px;color:#8195a3;margin:0 0 14px">Warnings can be overridden with a written reason. Blocking rules cannot.</p>
+            <div style="font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:#9fb1bd;margin-bottom:5px">Reason (logged to audit history)</div>
+            <textarea value="{{ ovReason }}" onInput="{{ onOvReason }}" rows="4" style="width:100%;padding:12px 13px;border:1.5px solid #dde7ef;border-radius:9px;font-size:13.5px;line-height:1.6;background:#f7fafc;resize:vertical" style-focus="border-color:#2774ae;background:#fff"></textarea>
+          </sc-if>
+
+        </div>
+        <div style="padding:16px 24px;border-top:1px solid #eef3f7;display:flex;gap:10px;justify-content:flex-end;background:#fbfdfe">
+          <button onClick="{{ closeModal }}" style="font-size:13.5px;font-weight:600;color:#5b6f7d;background:#fff;border:1.5px solid #dde7ef;border-radius:9px;padding:9px 16px;cursor:pointer" style-hover="border-color:#b7cadb">Cancel</button>
+          <button onClick="{{ modalConfirm }}" style="font-size:13.5px;font-weight:700;color:#fff;background:{{ confirmBg }};border:none;border-radius:9px;padding:9px 18px;cursor:pointer;opacity:{{ confirmOpacity }}">{{ confirmLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- TOAST -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#003b5c;color:#eaf3fa;padding:12px 20px;border-radius:11px;font-size:13.5px;font-weight:600;box-shadow:0 20px 50px -20px rgba(0,20,40,.6);z-index:60;animation:fadeup .22s ease both">{{ toast }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    loaded:false, view:'queue', queue:'incoming', live:null, liveErr:'', user:null, staff:undefined, authF:{mode:'in',email:'',pw:'',name:'',dept:'',err:'',msg:'',busy:false}, sel:null, me:'P003', search:'',
+    selRows:[], modal:null, chipSel:null, barH:0,
+    ov:{}, assign:{}, log:{}, exec:{}, ovr:{}, reminders:{},
+    tpl:'reminder', tplSel:'nudge_signer',
+    settings:{ stall:'7, then every 5', reappt:'180 / 90 / 60 / 30', h1b:'450 / 365 / 300', visaExp:'180 / 90 / 60 / 30', trainee:'5, then every 5', quiet:'3' },
+    autos:{ signatures:true, expiry:true, trainee:false, reappt:false },
+    templates:{
+      nudge_signer:{ label:'Nudge signer', subject:'Signature pending — {{packet_id}}', body:'Hi {{signer}},\n\nThe appointment packet for {{trainee}} ({{packet_id}}) is waiting on your signature. It has been pending {{days}} days.\n\nPlease review and sign at your earliest convenience.\n\nThank you,\nAcademic Trainee Office' },
+      reminder_reappointment:{ label:'Reappointment', subject:'Reappointment due — {{trainee}}', body:'Hello,\n\n{{trainee}}\u2019s appointment ({{packet_id}}) ends in {{days}} days. If they are continuing, please begin a reappointment packet so the record does not lapse.\n\nAcademic Trainee Office' },
+      visa_expiring:{ label:'Visa expiring', subject:'Visa lead-time reminder — {{trainee}}', body:'Hello,\n\nThis is a lead-time reminder for {{trainee}} ({{packet_id}}). Please confirm the visa/H-1B timeline with the external office.\n\nAcademic Trainee Office' },
+      missing_attachment:{ label:'Missing attachment', subject:'Action needed — {{packet_id}}', body:'Hi,\n\nThe packet for {{trainee}} ({{packet_id}}) is missing: {{needed}}.\n\nPlease send it so we can advance the record.\n\nThank you,\nAcademic Trainee Office' },
+      needs_correction:{ label:'Needs correction', subject:'Returned for correction — {{packet_id}}', body:'Hi,\n\nThe packet for {{trainee}} ({{packet_id}}) needs a correction before it can proceed: {{needed}}.\n\nPlease revise and resubmit.\n\nAcademic Trainee Office' }
+    }
+  };
+
+  ANCHOR = new Date().toISOString().slice(0,10);
+  SEED_ANCHOR = '2026-07-23';
+  SL = { draft:'Draft', awaiting_trainee:'Awaiting trainee', submitted:'Submitted', validating:'Validating', out_for_signature:'Out for signature', fully_signed:'Fully signed', ato_review:'ATO review', filed:'Filed', active:'Active', expiring:'Expiring', returned:'Returned', closed:'Closed', inquiry:'Visa inquiry', with_external_office:'With external office', pending_uscis:'Pending USCIS', approved:'Approved', denied:'Denied', referred:'Referred' };
+  PT = { new_appointment:'New appointment', reappointment:'Reappointment', action_request:'Action request', visa_case:'Visa case', termination_notice:'Termination notice', referral:'Referral' };
+  ROLE = { department_admin:'Department administrator', ato_review:'ATO review', fund_manager:'Fund manager', principal_investigator:'Principal investigator', ato:'ATO — final copy', faculty_mentor:'Faculty mentor' };
+  LIFE = ['submitted','validating','out_for_signature','fully_signed','ato_review','filed','active'];
+  LIFE_SHORT = { submitted:'Sub', validating:'Val', out_for_signature:'Sign', fully_signed:'Signed', ato_review:'Review', filed:'Filed', active:'Active' };
+  NEXT = { submitted:'validating', validating:'out_for_signature', out_for_signature:'fully_signed', fully_signed:'ato_review', ato_review:'filed', filed:'active' };
+  REQ_ATT = { ATP5:['proof_of_degree','statement_of_objective','cv','prehire_questionnaire'], ATP4:['proof_of_degree','statement_of_objective','cv','prehire_questionnaire'], AT2:['statement_of_objective','cv'], 'TA-APPT':['cv','statement_of_objective','prehire_questionnaire'], ARF:[], VGR:[], 'TERM-N':[] };
+  ATT_LABEL = { proof_of_degree:'Proof of degree', statement_of_objective:'Statement of objective', cv:'CV', prehire_questionnaire:'Pre-hire questionnaire', nih_appointment_form:'NIH appointment form', payback_agreement:'Payback agreement', resignation_letter:'Resignation letter', proof_of_funding:'Proof of funding' };
+  EXEC = { new_appointment:['Enter appointment in UCPath','Confirm DocuSign envelope complete','File signed packet in Box','Notify department administrator'], reappointment:['Update appointment in UCPath','Confirm DocuSign envelope complete','File signed packet in Box','Notify department administrator'], action_request:['Apply change in UCPath','Confirm DocuSign envelope complete','File in Box','Notify department administrator'], termination_notice:['Record separation in UCPath','File signed notice in Box','Notify department administrator'], visa_case:['Confirm outcome with external office','File correspondence in Box'] };
+  EXEC_SYS = { 'Enter appointment in UCPath':'UCPath','Update appointment in UCPath':'UCPath','Apply change in UCPath':'UCPath','Record separation in UCPath':'UCPath','Confirm DocuSign envelope complete':'DocuSign','File signed packet in Box':'Box','File in Box':'Box','File signed notice in Box':'Box','File correspondence in Box':'Box','Notify department administrator':'Email','Confirm outcome with external office':'External' };
+
+  barRef = React.createRef();
+  measureBar=()=>{};
+  componentDidUpdate(){
+    const key=this.state.view+'|'+this.state.queue+'|'+this.state.sel+'|'+this.state.chipSel+'|'+this.state.search;
+    if(this._navKey!==key){ this._navKey=key; const m=document.querySelector('main'); if(m) m.scrollTop=0; }
+  }
+
+  async componentDidMount(){
+    this.authInit();
+    try{
+      // Sample packets follow the backend's setting (WordPress: ATO Portal → Data). Other backends always load them.
+      const St0=window.ATOStore; if(St0&&St0.ready) await Promise.resolve(St0.ready).catch(()=>{});
+      this.seedOn=!(St0&&St0.caps&&St0.caps.seed===false);
+      const d = this.seedOn ? await (await fetch('data/ato-mock-data.json')).json()
+        : {people:[],trainees:[],packets:[],funding_lines:[],signature_steps:[],concurrent_appointments:[],clocks:[],consultations:[],validation_results:[]};
+      // Seed data was authored against 2026-07-23; slide it forward so "today" is real and intake packets line up.
+      const off=Math.round((new Date(this.ANCHOR)-new Date(this.SEED_ANCHOR))/86400000);
+      const shift=(v)=>{ const x=new Date(v+'T00:00:00Z'); x.setUTCDate(x.getUTCDate()+off); return x.toISOString().slice(0,10); };
+      ['packets','funding_lines','signature_steps','clocks','consultations','concurrent_appointments'].forEach(k=>(d[k]||[]).forEach(o=>Object.keys(o).forEach(f=>{ if(typeof o[f]==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(o[f])) o[f]=shift(o[f]); })));
+      const P={}; d.people.forEach(p=>P[p.id]=p);
+      const T={}; d.trainees.forEach(t=>T[t.id]=t);
+      const F={}; d.funding_lines.forEach(f=>{(F[f.packet_id]=F[f.packet_id]||[]).push(f);});
+      const S={}; d.signature_steps.forEach(s=>{(S[s.packet_id]=S[s.packet_id]||[]).push(s);});
+      Object.values(S).forEach(a=>a.sort((x,y)=>x.step_number-y.step_number));
+      const V={}; d.validation_results.forEach(v=>{(V[v.packet_id]=V[v.packet_id]||[]).push(v);});
+      const CL={}; d.clocks.forEach(c=>{(CL[c.packet_id]=CL[c.packet_id]||[]).push(c);});
+      const CO={}; d.consultations.forEach(c=>{(CO[c.packet_id]=CO[c.packet_id]||[]).push(c);});
+      this.d=d; this.P=P; this.T=T; this.F=F; this.S=S; this.V=V; this.CL=CL; this.CO=CO;
+      this.seedPackets=d.packets.slice(); this.seedIds=new Set(d.packets.map(p=>p.id));
+      this.addStaffPeople();
+      this.setState({loaded:true}, ()=>this.maybeStartSync());
+    }catch(e){ this.loadErr=String(e); this.setState({loaded:false}); this.forceUpdate(); }
+  }
+
+  componentWillUnmount(){ clearInterval(this._sync); if(this._unsubAuth) this._unsubAuth(); }
+  userInitials(n){ const s=String(n||'').trim().split(/\s+/); return (((s[0]||'')[0]||'')+((s.length>1?s[s.length-1]:'')[0]||'')).toUpperCase()||'·'; }
+  onAuthChange(u){
+    clearInterval(this._sync); this._sync=null;
+    this.setState({user:u, staff:u?undefined:null, view:'queue', sel:null, modal:null});
+    if(!u) return;
+    const St=window.ATOStore;
+    St.staffRecord().then(async r=>{
+      if(!r){ this.setState({staff:null}); return; }
+      try{ this.realStaff=await St.listStaff(); }catch(e){ this.realStaff=[r]; }
+      this.addStaffPeople();
+      this.setState({staff:r, me:u.email}, ()=>this.maybeStartSync());
+    }).catch(e=>this.setState({staff:null, live:'error', liveErr:String(e.message||e)}));
+  }
+  addStaffPeople(){ if(!this.P) return; (this.realStaff||[]).forEach(r=>{ const id=String(r.email).toLowerCase(); this.P[id]={id, full_name:r.full_name, email:id, roles:['ato_staff']}; }); }
+  maybeStartSync(){ if(this.state.loaded && this.state.staff && !this._sync){ this.syncRemote(); this._sync=setInterval(this.syncRemote,5000); } }
+
+  // ---- sign-in (identical in intake + console; both go through ATOStore) ----
+  authInit(){ const St=window.ATOStore; if(!St) return; this._unsubAuth=St.onAuth(u=>this.onAuthChange(u)); this.onAuthChange(St.user()); }
+  setAuthF=(k)=>(e)=>{ const v=e.target.value; this.setState(s=>({authF:{...s.authF,[k]:v,err:''}})); };
+  authMode=(m)=>this.setState(s=>({authF:{...s.authF,mode:m,err:'',msg:''}}));
+  authSubmit=async(e)=>{ if(e&&e.preventDefault) e.preventDefault(); const St=window.ATOStore; const f=this.state.authF; if(f.busy||!St) return;
+    const err=(m)=>this.setState(s=>({authF:{...s.authF,busy:false,err:m}}));
+    if(!/^\S+@\S+\.\S+$/.test(f.email||'')) return err('Enter a valid email address.');
+    if(f.mode!=='reset' && (f.pw||'').length<6) return err('Password must be at least 6 characters.');
+    if(f.mode==='up' && !(f.name||'').trim()) return err('Enter your full name.');
+    this.setState(s=>({authF:{...s.authF,busy:true,err:'',msg:''}}));
+    try{
+      if(f.mode==='in') await St.signIn(f.email,f.pw);
+      else if(f.mode==='up'){ const r=await St.signUp(f.email,f.pw,f.name.trim(),(f.dept||'').trim()); if(r.confirm){ this.setState(s=>({authF:{...s.authF,busy:false,mode:'in',pw:'',msg:'Account created. Check your email for the confirmation link, then sign in.'}})); return; } }
+      else { await St.resetPassword(f.email); this.setState(s=>({authF:{...s.authF,busy:false,mode:'in',msg:'If that email has an account, a reset link is on its way.'}})); return; }
+      this.setState(s=>({authF:{...s.authF,busy:false,pw:'',err:'',msg:''}}));
+    }catch(x){ err(/invalid login/i.test(x.message)?'Email or password is incorrect.':(x.message||String(x))); }
+  };
+  signOut=()=>{ if(window.ATOStore) window.ATOStore.signOut(); };
+  ssoVals(){ const St=window.ATOStore||{}; const c=St.caps||{password:true,signup:true};
+    const pend=!!c.pending, sso=!!c.sso&&!pend, pw=c.password!==false&&!pend;
+    return { authChecking:pend, authSso:sso, authPwOn:pw, authShowOr:sso&&pw, authSignupOn:c.signup!==false,
+      authSsoLabel:c.ssoLabel||'Sign in with UCLA Logon', authSsoGo:()=>{ if(St.ssoSignIn) St.ssoSignIn(); } }; }
+  authVals(copy){ const f=this.state.authF; const m=f.mode;
+    return { authTitle:m==='up'?'Create your account':(m==='reset'?'Reset your password':copy.title), authSub:m==='up'?copy.upSub:(m==='reset'?'Enter your sign-in email and we\u2019ll send a reset link.':copy.inSub),
+      authIsUp:m==='up', authIsIn:m==='in', authNeedsPw:m!=='reset', authPwAuto:m==='up'?'new-password':'current-password',
+      authEmail:f.email, authPw:f.pw, authName:f.name, authDept:f.dept,
+      onAuthEmail:this.setAuthF('email'), onAuthPw:this.setAuthF('pw'), onAuthName:this.setAuthF('name'), onAuthDept:this.setAuthF('dept'),
+      authSubmit:this.authSubmit, authBusy:!!f.busy, authBtnOpacity:f.busy?'.6':'1',
+      authSubmitLabel:f.busy?'Working…':(m==='up'?'Create account':(m==='reset'?'Send reset link':'Sign in')),
+      authErr:f.err, hasAuthErr:!!f.err, authMsg:f.msg, hasAuthMsg:!!f.msg,
+      ...this.ssoVals(), authAlt:()=>this.authMode(m==='in'?'up':'in'), authAltLabel:m==='in'?'New here? Create an account':'Have an account? Sign in', authToReset:()=>this.authMode('reset') }; }
+
+  // ---- shared store (intake ↔ console) ----
+  _inflight=0;
+  syncRemote = async () => {
+    const St=window.ATOStore; if(!St||!this.d||!this.state.staff||this._inflight>0) return;
+    try{
+      const [pk,up,ev,sg]=await Promise.all([St.listPackets(),St.listUpdates(),St.listEvents(),St.listSignatures?St.listSignatures().catch(()=>[]):Promise.resolve([])]);
+      if(this._inflight>0) return;
+      const SG={}; (sg||[]).forEach(g=>{ (SG[g.packet_id]=SG[g.packet_id]||[]).push(g); }); this.SG=SG;
+      const extra=[];
+      pk.forEach(row=>{ const b=row.bundle||{}; const p=b.packet; if(!p||this.seedIds.has(p.id)) return;
+        extra.push({...p, _intake:true, _atts:b.attachments||[], _updated:row.updated_at});
+        (b.people||[]).forEach(x=>{ this.P[x.id]=x; }); if(b.trainee) this.T[b.trainee.id]=b.trainee;
+        this.F[p.id]=b.funding_lines||[]; this.S[p.id]=b.signature_steps||[]; this.V[p.id]=b.validation_results||[]; });
+      extra.sort((a,b)=>(a._updated||'')<(b._updated||'')?1:-1);
+      this.d.packets=[...extra, ...this.seedPackets];
+      const ov={}, assign={}; up.forEach(u=>{ if(u.status) ov[u.packet_id]=u.status; if(u.analyst_id) assign[u.packet_id]=u.analyst_id; });
+      const log={}, exec={}, ovr={}, reminders={};
+      ev.forEach(e=>{ const pid=e.packet_id; const dt=e.data||{};
+        if(e.kind!=='submit' || /^Resubmitted/.test(e.text||'')) (log[pid]=log[pid]||[]).push({text:e.text, meta:(e.actor||'System')+' · '+this.fmtStamp(e.created_at), dot:e.dot});
+        if(e.kind==='exec') exec[pid]={...(exec[pid]||{}), [dt.i]: dt.done?{done:true,by:dt.by,at:dt.at}:{done:false}};
+        if(e.kind==='override') ovr[pid+'|'+dt.rule]=dt.reason;
+        if(e.kind==='reminder') reminders[pid]=(e.created_at||'').slice(0,10); });
+      this.setState({ov, assign, log, exec, ovr, reminders, live:'ok', liveErr:'', intakeN:extra.length});
+    }catch(e){ this.setState({live:'error', liveErr:String(e.message||e)}); }
+  };
+  write(p){ const St=window.ATOStore; if(!St) return; this._inflight++; Promise.resolve(p).catch(e=>this.setState({live:'error', liveErr:String(e.message||e)})).finally(()=>{ this._inflight--; if(this._inflight===0) this.syncRemote(); }); }
+  setStatus(pid,st){ this.setState(s=>({ov:{...s.ov,[pid]:st}})); if(window.ATOStore) this.write(window.ATOStore.setUpdate(pid,{status:st, updated_by:this.nameOf(this.state.me)})); }
+  setAssign(pid,to){ this.setState(s=>({assign:{...s.assign,[pid]:to}})); if(window.ATOStore) this.write(window.ATOStore.setUpdate(pid,{analyst_id:to, updated_by:this.nameOf(this.state.me)})); }
+  fmtStamp(ts){ if(!ts) return ''; const x=new Date(ts); return x.toLocaleDateString('en-US',{month:'short',day:'numeric'})+', '+x.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+  resetShared = async () => {
+    if(!window.ATOStore||!window.confirm('Delete every packet submitted from the intake and every office action recorded by testers? Seed data stays.')) return;
+    this._inflight++; try{ await window.ATOStore.resetAll(); this.toast('Shared test data reset'); }catch(e){ this.toast('Reset failed — '+(e.message||e)); } this._inflight--; this.syncRemote();
+  };
+  deriveIntake(){
+    (this.d.packets||[]).forEach(p=>{ if(!p._intake) return; const st=this.effStatus(p); const i=this.LIFE.indexOf(st);
+      const steps=this.S[p.id]||[]; const n=steps.length;
+      const SG=(this.SG||{})[p.id];
+      if(SG&&SG.length){ // live approval route from the server
+        steps.forEach(s=>{ const rs=SG.filter(g=>g.seq===s.step_number);
+          if(rs.length) s.status=rs.every(g=>g.status==='approved')?'signed':(rs.some(g=>g.status==='sent'||g.status==='missing')?'pending':'not_started');
+          else if(s.role==='department_admin') s.status='signed';
+          else if(s.role==='ato_review') s.status=i>=2?'signed':'pending';
+          else s.status=i>=5?'signed':((st==='fully_signed'||st==='ato_review')?'pending':'not_started'); });
+        (this.F[p.id]||[]).forEach(f=>{ const em=String(this.emailOf(f.fund_manager_id)||'').toLowerCase(); const g=SG.find(x=>x.role==='fund_manager'&&x.email===em); f.approval_status=g&&g.status==='approved'?'approved':'pending'; });
+        return; }
+      steps.forEach((s,k)=>{ let v='not_started';
+        if(k===0) v='signed';
+        else if(k===1) v= i>=2?'signed':(['submitted','validating'].includes(st)?'pending':'not_started');
+        else if(k===n-1) v= i>=5?'signed':((st==='fully_signed'||st==='ato_review')?'pending':'not_started');
+        else v= i>=3?'signed':((st==='out_for_signature'&&k===2)?'pending':'not_started');
+        s.status=v; });
+      (this.F[p.id]||[]).forEach(f=>{ f.approval_status = i>=3?'approved':'pending'; }); });
+  }
+
+  // ---- helpers ----
+  days(a,b){ if(!a||!b) return null; return Math.round((new Date(b)-new Date(a))/86400000); }
+  daysSince(d){ return d? this.days(d,this.ANCHOR):null; }
+  daysUntil(d){ return d? this.days(this.ANCHOR,d):null; }
+  fmtDate(d){ if(!d) return '—'; const x=new Date(d+'T00:00:00'); if(isNaN(x)) return d; return x.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+  nameOf(pid){ const p=this.P[pid]; return p?p.full_name:'—'; }
+  emailOf(pid){ const p=this.P[pid]; return p?p.email:''; }
+  initials(pid){ const n=this.nameOf(pid); if(!n||n==='—') return '?'; const s=n.split(' '); return ((s[0]||'')[0]||'')+((s[s.length-1]||'')[0]||''); }
+  traineeName(pkt){ const t=this.T[pkt.trainee_id]; return t? this.nameOf(t.person_id):'Unknown trainee'; }
+  effStatus(pkt){ return this.state.ov[pkt.id] || pkt.status; }
+  analystOf(pkt){ return this.state.assign[pkt.id] || pkt.ato_analyst_id; }
+  titleLabel(pkt){ if(pkt.is_dual_title&&pkt.title_codes) return pkt.title_codes.join('+'); if(pkt.title_code) return pkt.title_code; if(pkt.visa_type) return pkt.visa_type; return '—'; }
+  sinceDate(pkt){ const st=this.effStatus(pkt); if(['filed','active','expiring'].includes(st)) return pkt.filed_at||pkt.submitted_at||pkt.created_at; if(['draft','awaiting_trainee'].includes(st)) return pkt.created_at; return pkt.submitted_at||pkt.created_at; }
+  stallDays(pkt){ return this.daysSince(pkt.submitted_at||pkt.created_at); }
+  stallThreshold(){ const n=parseInt(this.state.settings.stall); return isNaN(n)?7:n; }
+
+  // ---- queue registry ----
+  queueDefs(){
+    const me=this.state.me, TH=this.stallThreshold();
+    return [
+      { id:'incoming', label:'New submissions', desc:'Sent in from the intake and not yet through ATO validation. Check the documents and rules, then advance or return to the preparer.', colState:'Status', colDate:'Submitted', bulk:'claim',
+        pred:p=>['submitted','validating'].includes(this.effStatus(p)), sort:(a,b)=>((b._updated||b.submitted_at||'')>(a._updated||a.submitted_at||''))?1:-1 },
+      { id:'needs_action', label:'Needs my action', desc:'Packets waiting on ATO to verify and file. This is the work queue — everything here needs you before it can move.', colState:'Status', colDate:'Submitted', bulk:'claim',
+        pred:p=>this.effStatus(p)==='ato_review' && (this.analystOf(p)===me || !this.analystOf(p)), sort:(a,b)=>this.daysSince(a.submitted_at)>this.daysSince(b.submitted_at)?-1:1 },
+      { id:'stalled', label:'Stalled', desc:'Out for signature past the stall threshold — signers sitting on packets. Remind them in one click.', colState:'Status', colDate:'Waiting', bulk:'remind_signer',
+        pred:p=>this.effStatus(p)==='out_for_signature' && this.stallDays(p)>TH, sort:(a,b)=>this.stallDays(a)>this.stallDays(b)?-1:1 },
+      { id:'expiring', label:'Expiring soon', desc:'Active appointments inside the reappointment window. Decide continue or end before the clock runs out.', colState:'Status', colDate:'Ends', bulk:'reappt',
+        pred:p=>this.effStatus(p)==='active' && this.daysUntil(p.appointment_end_date)!=null && this.daysUntil(p.appointment_end_date)<=180, sort:(a,b)=>this.daysUntil(a.appointment_end_date)-this.daysUntil(b.appointment_end_date) },
+      { id:'visa_watch', label:'Visa watch', desc:'Active visa / H-1B cases inside their lead window. The expensive-to-miss ones.', colState:'Stage', colDate:'Opened', bulk:'visa_status',
+        pred:p=>p.packet_type==='visa_case' && ['inquiry','with_external_office','pending_uscis'].includes(this.effStatus(p)), sort:(a,b)=>this.daysSince(a.submitted_at||a.created_at)>this.daysSince(b.submitted_at||b.created_at)?-1:1 },
+      { id:'awaiting_trainee', label:'Waiting on trainee', desc:'Student questionnaires not yet completed. The packet is blocked on someone outside the office.', colState:'Status', colDate:'Opened', bulk:'trainee_link',
+        pred:p=>this.effStatus(p)==='awaiting_trainee', sort:(a,b)=>this.daysSince(a.created_at)>this.daysSince(b.created_at)?-1:1 },
+      { id:'nobody', label:"Nobody's watching", desc:'System-generated packets — auto-terminations — with no human owner. Without this view they quietly accumulate.', colState:'Status', colDate:'Created', bulk:'claim',
+        pred:p=>p.origin==='system' && this.daysSince(p.created_at)>=14 && !['closed'].includes(this.effStatus(p)), sort:(a,b)=>this.daysSince(a.created_at)>this.daysSince(b.created_at)?-1:1 },
+      { id:'returned', label:'Returned', desc:'Bounced back to the preparer with ATO notes. Waiting on them, not on you.', colState:'Status', colDate:'Returned', bulk:'nudge_preparer',
+        pred:p=>this.effStatus(p)==='returned', sort:(a,b)=>this.daysSince(a.submitted_at)>this.daysSince(b.submitted_at)?-1:1 },
+      { id:'all', label:'All active', desc:'Every in-flight packet. The everything view — search and browse.', colState:'Status', colDate:'Updated', bulk:'remind_signer',
+        pred:p=>this.effStatus(p)!=='closed', sort:(a,b)=>a.id<b.id?1:-1 }
+    ];
+  }
+
+  // ---- synthesized event history ----
+  buildEvents(pkt){
+    const evs=[]; const t=this.T[pkt.trainee_id];
+    const push=(text,meta,dot)=>evs.push({text,meta,dot:dot||'#c3d0da',ring:'#eef3f7'});
+    if(pkt.created_at) push(pkt.origin==='system'?'Packet generated by the system':'Packet created', (pkt.origin==='system'?'System':this.nameOf(pkt.department_admin_id))+' · '+this.fmtDate(pkt.created_at));
+    if(pkt.submitted_at) push('Submitted to ATO', this.nameOf(pkt.department_admin_id)+' · '+this.fmtDate(pkt.submitted_at));
+    const steps=(this.S[pkt.id]||[]).filter(s=>s.status==='signed');
+    const sd=pkt.submitted_at||pkt.created_at, fd=pkt.filed_at||this.ANCHOR;
+    steps.forEach((s,i)=>{
+      let when=sd; if(sd&&fd){ const span=this.days(sd,fd)||steps.length; const off=Math.round(span*(i+1)/(steps.length+1)); const dt=new Date(sd); dt.setDate(dt.getDate()+off); when=dt.toISOString().slice(0,10); }
+      push((s.label||this.ROLE[s.role]||s.role)+' signed', this.nameOf(s.signer_id)+' · '+this.fmtDate(when), '#8195a3');
+    });
+    if(pkt.filed_at) push('Filed — record complete', this.nameOf(pkt.ato_analyst_id||'')+' · '+this.fmtDate(pkt.filed_at), '#2774ae');
+    if(this.effStatus(pkt)==='active') push('Appointment active — clocks running', 'System · '+this.fmtDate(pkt.filed_at||pkt.submitted_at), '#2774ae');
+    const rt=(this.state.log[pkt.id]||[]);
+    return [...evs, ...rt.map(e=>({text:e.text, meta:e.meta, dot:e.dot||'#a0742a', ring:'#f5eee0'}))];
+  }
+  logEvent(pid,text,dot,kind,data){ const meta=this.nameOf(this.state.me)+' · just now'; this.setState(s=>({log:{...s.log,[pid]:[...(s.log[pid]||[]),{text,meta,dot}]}}));
+    if(window.ATOStore){ const pr=window.ATOStore.addEvent({packet_id:pid, kind:kind||'note', text, actor:this.nameOf(this.state.me), dot:dot||null, data:data||null}); this.write(pr); return pr; } }
+  mailToast(pr,label){ this.toast(label+' sent & logged'); Promise.resolve(pr).then(r=>{ const m=r&&r.mail; if(m==='off') this.toast(label+' logged — email delivery is off'); else if(m==='blocked') this.toast(label+' logged — address outside allowed domains, not sent'); else if(m==='failed') this.toast(label+' logged — could not be sent'); }).catch(()=>{}); }
+
+  attsFor(pkt){
+    if(pkt._intake){ const i=this.LIFE.indexOf(this.effStatus(pkt)); return (pkt._atts||[]).map(a=>({key:a.key, label:a.label, present:a.present, verified:a.present&&i>=2})); }
+    const req=this.REQ_ATT[pkt.form_template]||[]; const st=this.effStatus(pkt);
+    return req.map((k,i)=>{
+      let present=true, verified=false;
+      if(['filed','active','expiring'].includes(st)){ present=true; verified=true; }
+      else if(['ato_review','fully_signed','out_for_signature'].includes(st)){ present=true; verified=(i<req.length-1); }
+      else if(st==='returned'){ present=(i!==0); verified=false; }
+      else { present=(i<req.length-1); verified=false; }
+      return { key:k, label:this.ATT_LABEL[k]||k, present, verified };
+    });
+  }
+
+  // ---- actions ----
+  open(pid){ this.setState({view:'detail', sel:pid, selRows:[]}); }
+  goHome=()=>this.setState({view:'queue', sel:null});
+  backToQueue=()=>this.setState({view:'queue', sel:null});
+  selectQueue(id){ this.setState({queue:id, view:'queue', sel:null, selRows:[], chipSel:null}); }
+  openSettings=()=>this.setState({view:'settings'});
+  advance(pid){ const p=this.byId(pid); const nx=this.NEXT[this.effStatus(p)]; if(!nx) return; this.setStatus(pid,nx); this.logEvent(pid,'Advanced to '+(this.SL[nx]||nx),'#2774ae','status',{to:nx}); this.toast('Advanced to '+(this.SL[nx]||nx)); }
+  byId(pid){ return this.d.packets.find(p=>p.id===pid); }
+  toast(msg){ this.setState({toast:msg}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2600); }
+  closeModal=()=>this.setState({modal:null});
+  stop=(e)=>{ e.stopPropagation(); };
+
+  toggleRow(pid){ this.setState(s=>({selRows: s.selRows.includes(pid)? s.selRows.filter(x=>x!==pid): [...s.selRows,pid]})); }
+  clearSel=()=>this.setState({selRows:[]});
+
+  openEmail(pid){ const p=this.byId(pid); const tpl=this.state.templates.missing_attachment; this.setState({modal:{type:'email', pid, to:this.nameOf(p.department_admin_id), toEmail:this.emailOf(p.department_admin_id), subject:this.merge(tpl.subject,p), body:this.merge(tpl.body,p)}}); }
+  openReminder(pid){ const p=this.byId(pid); const tpl=this.state.templates.nudge_signer; this.setState({modal:{type:'reminder', pid, to:'Pending signer', toEmail:this.pendingSignerEmail(p), subject:this.merge(tpl.subject,p), body:this.merge(tpl.body,p)}}); }
+  openReturn(pid){ this.setState({modal:{type:'return', pid, note:''}}); }
+  openReassign(pid){ this.setState({modal:{type:'reassign', pid}}); }
+  openOverride(pid,rule,message){ this.setState({modal:{type:'override', pid, rule, message, reason:''}}); }
+  sigRow(g){
+    const L={ approved:['Approved','#2e7d4f'], sent:[g.expired?'Link expired':'Approval link sent','#2774ae'], missing:['No email address','#a33a2f'], waiting:['Waiting for earlier approvers','#a6b4bf'], changes:['Changes requested','#a0742a'] }[g.status]||[g.status,'#a6b4bf'];
+    const done=g.status==='approved';
+    const sub= done?((g.signed_name?'“'+g.signed_name+'” · ':'')+this.fmtStamp(g.acted_at)+(g.note?' · '+g.note:'')) : g.status==='sent'?((g.reminded_at?'Reminded ':'Sent ')+this.fmtStamp(g.reminded_at||g.sent_at)) : g.status==='changes'?('“'+(g.note||'')+'”') : '';
+    const A=(label,act)=>({label, onClick:()=>this.sigAct(g,act)});
+    const acts= g.status==='sent'?[A('Resend email','resend'),A('Copy link','link'),A('Change email','email'),A('Record approval','offline')] : g.status==='missing'?[A('Add email & send','email'),A('Copy link','link'),A('Record approval','offline')] : g.status==='waiting'?[A('Record approval','offline')] : [];
+    return { n: done?'✓':g.seq, roleLabel:g.label, signer:(g.name||'Not named')+(g.email?' · '+g.email:''),
+      badgeBg: done?'#2774ae':'#fff', badgeFg: done?'#fff':(g.status==='waiting'?'#b7c4ce':'#2774ae'), badgeBd: done?'#2774ae':(g.status==='waiting'?'#e0e8ef':'#2774ae'),
+      statusText:L[0], statusColor:L[1], sub, subColor:'#8195a3', hasActs:acts.length>0, acts };
+  }
+  sigAct = async (g, action) => { const St=window.ATOStore; if(!St||!St.signatureAction) return;
+    let body={action};
+    if(action==='email'){ const e=window.prompt('Email address for '+(g.name||g.label)+':', g.email||''); if(!e||!e.trim()) return; body={action:'resend', email:e.trim()}; }
+    if(action==='offline'){ const n=window.prompt('How and when was this approval given? For example: Approved by email on Nov 3.', ''); if(!n||!n.trim()) return; body.note=n.trim(); }
+    this._inflight++;
+    try{ const r=await St.signatureAction(g.id, body);
+      if(action==='link'&&r&&r.url){ let ok=false; try{ await navigator.clipboard.writeText(r.url); ok=true; }catch(e){} if(ok) this.toast('Link copied. Send it to '+(g.name||'the approver')+'.'); else window.prompt('Copy this approval link:', r.url); }
+      else if(r&&r.mail) this.toast({ sent:'Approval email sent', off:'Email is off. Use Copy link.', blocked:'Address outside the allowed domains. Not sent.', failed:'The email could not be sent.', missing:'No email address on file.' }[r.mail]||'Done');
+      else this.toast(action==='offline'?'Approval recorded':'Done');
+    }catch(e){ this.toast(String(e.message||e)); }
+    this._inflight--; this.syncRemote(); };
+  pendingSignerEmail(p){ const s=(this.S[p.id]||[]).find(x=>x.status==='pending'); return s?this.emailOf(s.signer_id):''; }
+  waitingOn(p){
+    const st=this.effStatus(p);
+    if(['out_for_signature','fully_signed'].includes(st)){ const s=(this.S[p.id]||[]).find(x=>x.status==='pending'); if(s) return {id:s.signer_id, name:this.nameOf(s.signer_id), role:this.ROLE[s.role]||'Signer'}; }
+    if(st==='awaiting_trainee'){ const t=this.T[p.trainee_id]; if(t) return {id:t.person_id, name:this.nameOf(t.person_id), role:'Trainee'}; }
+    if(['returned','draft'].includes(st) && p.department_admin_id) return {id:p.department_admin_id, name:this.nameOf(p.department_admin_id), role:'Department administrator'};
+    const a=this.analystOf(p); if(a) return {id:a, name:this.nameOf(a), role:'ATO analyst'};
+    return {id:'', name:'Unassigned', role:''};
+  }
+  fauText(p){ return (this.F[p.id]||[]).map(f=>f.fau+' '+this.nameOf(f.fund_manager_id)).join(' '); }
+  signerText(p){ return (this.S[p.id]||[]).map(s=>this.nameOf(s.signer_id)).join(' '); }
+  merge(str,p){ const t=this.T[p.trainee_id]; const end=p.appointment_end_date; return String(str)
+    .split('{{trainee}}').join(this.traineeName(p))
+    .split('{{packet_id}}').join(p.id)
+    .split('{{signer}}').join((()=>{const s=(this.S[p.id]||[]).find(x=>x.status==='pending');return s?this.nameOf(s.signer_id):'signer';})())
+    .split('{{days}}').join(end?Math.abs(this.daysUntil(end)):this.stallDays(p))
+    .split('{{needed}}').join('the outstanding item'); }
+
+  setCmp(k,v){ this.setState(s=>({modal:{...s.modal,[k]:v}})); }
+  pickTemplate(key){ const p=this.byId(this.state.modal.pid); const tpl=this.state.templates[key]; this.setState(s=>({modal:{...s.modal, subject:this.merge(tpl.subject,p), body:this.merge(tpl.body,p)}})); }
+
+  confirmModal=()=>{
+    const m=this.state.modal; if(!m) return; const p=this.byId(m.pid);
+    if(m.type==='email'){ this.mailToast(this.logEvent(m.pid,'Email sent to '+m.to+' — "'+m.subject+'"','#a0742a','email',{to_email:m.toEmail, subject:m.subject, body:m.body}),'Email'); this.setState({modal:null}); }
+    else if(m.type==='reminder'){ this.mailToast(this.logEvent(m.pid,'Reminder sent to '+m.to+' — "'+m.subject+'"','#a0742a','reminder',{to_email:m.toEmail, subject:m.subject, body:m.body}),'Reminder'); this.setState(s=>({reminders:{...s.reminders,[m.pid]:this.ANCHOR}})); this.setState({modal:null}); }
+    else if(m.type==='return'){ if(!m.note||!m.note.trim()){ this.toast('A note is required to return'); return; } this.setStatus(m.pid,'returned'); this.logEvent(m.pid,'Returned for correction — "'+m.note.trim()+'"','#a0742a','return',{note:m.note.trim()}); this.toast('Returned to preparer'); this.setState({modal:null}); }
+    else if(m.type==='override'){ if(!m.reason||!m.reason.trim()){ this.toast('A reason is required'); return; } this.setState(s=>({ovr:{...s.ovr,[m.pid+'|'+m.rule]:m.reason.trim()}})); this.logEvent(m.pid,'Override '+m.rule+' — "'+m.reason.trim()+'"','#a0742a','override',{rule:m.rule,reason:m.reason.trim()}); this.toast('Warning overridden & logged'); this.setState({modal:null}); }
+  };
+  doReassign(pid,to){ this.setAssign(pid,to); this.logEvent(pid,'Reassigned to '+this.nameOf(to),'#2774ae','assign',{to}); this.toast('Reassigned to '+this.nameOf(to)); this.setState({modal:null}); }
+  toggleExec(pid,i,label){ const done=!(this.state.exec[pid]&&this.state.exec[pid][i]&&this.state.exec[pid][i].done); this.setState(s=>({exec:{...s.exec,[pid]:{...(s.exec[pid]||{}),[i]:done?{done:true,by:this.nameOf(this.state.me),at:this.ANCHOR}:{done:false}}}})); this.logEvent(pid,(done?'Execution: ':'Execution undone: ')+label, done?'#2e7d4f':'#8195a3','exec',{i, done, by:this.nameOf(this.state.me), at:this.ANCHOR}); }
+
+  setSetting(k,v){ this.setState(s=>({settings:{...s.settings,[k]:v}})); }
+  toggleAuto(k){ this.setState(s=>({autos:{...s.autos,[k]:!s.autos[k]}})); }
+  selectTpl(key){ this.setState({tplSel:key}); }
+  setTpl(field,v){ const key=this.state.tplSel; this.setState(s=>({templates:{...s.templates,[key]:{...s.templates[key],[field]:v}}})); }
+
+  renderVals(){
+    const u=this.state.user;
+    const who={ signedIn:!!u, userName:u?u.name:'', userInitials:this.userInitials(u&&u.name), userEmail:u?u.email:'', signOut:this.signOut, isStaff:!!(u&&this.state.staff) };
+    if(!u || !this.state.staff){
+      const checking=!!u && this.state.staff===undefined;
+      return { ...who, needAuth:!u, notStaff:!!u&&this.state.staff===null, notLoaded:checking, loaded:false, toast:this.state.toast||'', queues:[], meOpts:[],
+        ...(u?{}:this.authVals({ title:'Sign in to the console', inSub:'ATO office staff only. Work the queues, validate submissions and file.', upSub:'Create an account with your office email. Access is granted from the ATO office list.' })),
+        ...this.modalVals() };
+    }
+    const me=this.state.me;
+    const meOpts=(this.P?Object.values(this.P):[]).filter(p=>p.roles&&p.roles.includes('ato_staff')).map(p=>({v:p.id,label:p.full_name}));
+    const common={ ...who,
+      goHome:this.goHome, onSettings:this.openSettings, backToQueue:this.backToQueue,
+      me, meOpts, meInitials:(this.P?this.initials(me):'··'),
+      onMe:(e)=>this.setState({me:e.target.value, selRows:[]}),
+      search:this.state.search, onSearch:(e)=>{ const v=e.target.value; this.setState(v.trim()&&this.state.view==='detail'?{search:v, view:'queue', sel:null}:{search:v}); },
+      settingsColor: this.state.view==='settings'?'#003b5c':'#5b6f7d',
+      notLoaded:!this.state.loaded, loaded:this.state.loaded,
+      showSidebar:this.state.view!=='settings',
+      isQueue:this.state.view==='queue', isDetail:this.state.view==='detail', isSettings:this.state.view==='settings',
+      barRef:this.barRef,
+      railTop:((this.state.barH||100)+14)+'px',
+      railMax:'calc(100vh - '+((this.state.barH||100)+128)+'px)',
+      toast:this.state.toast||'',
+      liveLabel: this.state.live==='ok'?'Live · shared data':(this.state.live==='error'?'Offline · local only':'Connecting…'),
+      liveDot: this.state.live==='ok'?'#2e7d4f':(this.state.live==='error'?'#c0503a':'#b7c4ce'),
+      liveFg: this.state.live==='error'?'#a3543f':'#5b6f7d',
+      liveTitle: this.state.live==='error'?('Shared database unreachable: '+this.state.liveErr):'Intake submissions and office actions sync every 5 seconds',
+      liveSummary: this.state.live==='ok'?((this.state.intakeN||0)+' packet'+((this.state.intakeN===1)?'':'s')+' submitted from the intake. Every status change, assignment, note and reminder here is saved to the shared database and visible to every tester. Reset clears tester activity; the seed packets stay.'):('Not connected to the shared database — changes stay in this browser. '+(this.state.liveErr||'')),
+      onResetShared:this.resetShared
+    };
+    if(this.state.loaded) this.deriveIntake();
+    if(!this.state.loaded) return {...common, ...this.modalVals()};
+
+    // queues + counts
+    const defs=this.queueDefs();
+    const pkts=this.d.packets;
+    const queues=defs.map(def=>{
+      const n=pkts.filter(def.pred).length; const active=this.state.queue===def.id && this.state.view!=='settings';
+      return { id:def.id, label:def.label, count:n, onSelect:()=>this.selectQueue(def.id),
+        bg:active?'#f0f6fb':'transparent', rule:active?'#2774ae':'transparent', fg:active?'#003b5c':'#3a4f5c', weight:active?'700':'500',
+        countColor: n>0?(active?'#2774ae':'#7f93a1'):'#c3d0da' };
+    });
+    const def=defs.find(d=>d.id===this.state.queue)||defs[0];
+    const meName=this.nameOf(me);
+    common.me_summary='Signed in as '+meName+'. "Needs my action" shows packets assigned to you (or unassigned) in ATO review. New submissions shows everything sent from the intake by every department.';
+
+    if(this.state.view==='detail' && this.state.sel){ return {...common, queues, ...this.detailVals(), ...this.modalVals()}; }
+    if(this.state.view==='settings'){ return {...common, queues, ...this.settingsVals(), ...this.modalVals()}; }
+
+    // QUEUE rows
+    let rows=pkts.filter(def.pred);
+    const q=this.state.search.trim().toLowerCase();
+    let searching=false;
+    if(q){ searching=true; rows=pkts.filter(p=>this.effStatus(p)!=='closed').filter(p=> (this.traineeName(p)+' '+p.id+' '+this.titleLabel(p)+' '+this.nameOf(p.pi_id)+' '+this.PT[p.packet_type]+' '+this.fauText(p)+' '+this.signerText(p)).toLowerCase().includes(q)); }
+    rows=rows.slice().sort(def.sort);
+    // waiting-on grouping chips
+    const groupMap=new Map();
+    rows.forEach(p=>{ const w=this.waitingOn(p); const k=w.id||'none';
+      if(!groupMap.has(k)) groupMap.set(k,{id:w.id, name:w.name, role:w.role, count:0});
+      groupMap.get(k).count++; });
+    const groups=[...groupMap.values()].sort((a,b)=>b.count-a.count);
+    const showChips = !searching && rows.length>4 && groups.length>1;
+    const chipSel = showChips?this.state.chipSel:null;
+    if(chipSel) rows=rows.filter(p=>(this.waitingOn(p).id||'none')===chipSel);
+    const chips = showChips? [{id:null, name:'Everyone', count:groupMap.size===0?0:[...groupMap.values()].reduce((s,g)=>s+g.count,0)}].concat(groups.slice(0,6).map(g=>({id:g.id||'none', name:g.name, count:g.count})))
+      .map(c=>{ const on = (c.id||null)===(chipSel||null);
+        return { name:c.name, count:c.count, onClick:()=>this.setState({chipSel:c.id, selRows:[]}),
+          bg:on?'#003b5c':'#fff', bd:on?'#003b5c':'#dde7ef', fg:on?'#fff':'#3a4f5c', countFg:on?'#9fc0da':'#9fb1bd', weight:on?'700':'500' }; }) : [];
+    const TH=this.stallThreshold();
+    const rowVMs=rows.map(p=>{
+      const st=this.effStatus(p); const sd=this.sinceDate(p); const dis=this.daysSince(sd);
+      let urgentText='', urgentColor='#8195a3', urgentRule='transparent';
+      let dateStr=this.fmtDate(sd), colVal='';
+      if(def.id==='stalled'){ const w=this.stallDays(p); dateStr=w+'d waiting'; if(w>TH){urgentText=(w-TH)+'d over';} }
+      else if(def.id==='expiring'){ const u=this.daysUntil(p.appointment_end_date); dateStr=this.fmtDate(p.appointment_end_date); if(u<=30){urgentText=(u<0?Math.abs(u)+'d lapsed':u+'d left'); urgentRule='#d8a59a';} else if(u<=90){urgentText=u+'d left';urgentColor='#8195a3';} }
+      else if(def.id==='visa_watch'){ dateStr=this.fmtDate(p.submitted_at||p.created_at); }
+      else if(def.id==='nobody'){ const w=this.daysSince(p.created_at); dateStr=w+'d unowned'; urgentText='no owner'; }
+      else { if(dis!=null&&dis>21&&['ato_review','out_for_signature'].includes(st)){ urgentText=dis+'d in state'; urgentColor='#8195a3'; } }
+      const analyst=this.analystOf(p); const dot = st==='active'||st==='filed'?'#2e7d4f': st==='returned'?'#c98a34': st==='ato_review'?'#2774ae':'#b7c4ce';
+      const wo=this.waitingOn(p);
+      const sub = def.id==='nobody'?'No owner':('→ '+wo.name);
+      const seld=this.state.selRows.includes(p.id);
+      return { pid:p.id, name:this.traineeName(p), typeLabel:this.PT[p.packet_type]||p.packet_type, title:this.titleLabel(p),
+        statusLabel:this.SL[st]||st, dot, analyst: analyst?this.nameOf(analyst):'Unassigned', sub, date:dateStr,
+        urgentText, urgentColor, urgentRule, rowBg:seld?'#f0f6fb':'#fff',
+        checkBd:seld?'#2774ae':'#cfdae4', checkBg:seld?'#2774ae':'#fff', checkMark:seld?'✓':'',
+        onOpen:()=>this.open(p.id), onToggleSel:(e)=>{e.stopPropagation();this.toggleRow(p.id);} };
+    });
+    const BULK={ claim:{label:'Assign to me'}, remind_signer:{label:'Remind signer'}, reappt:{label:'Start reappointment'}, visa_status:{label:'Request status update'}, trainee_link:{label:'Resend questionnaire link'}, nudge_preparer:{label:'Nudge preparer'} };
+    const bulkKind=def.bulk||'remind_signer';
+    return {...common, queues,
+      hasChips: chips.length>0, chips, chipLabel: ['stalled','returned','awaiting_trainee','visa_watch'].includes(def.id)?'Waiting on':'Owner',
+      q:{ label: searching?'Search results':def.label, desc: searching?('Matching “'+this.state.search.trim()+'” across names, IDs, title codes, PIs, signers and FAUs.'):def.desc, count:rowVMs.length, countNoun: rowVMs.length===1?'packet':'packets', colState:def.colState, colDate: searching?'Updated':def.colDate },
+      rows:rowVMs, empty:rowVMs.length===0, emptyMsg: searching?'No packets match that search.':(this.state.chipSel?'Nothing left for this person in this queue.':'Nothing in this queue right now — clear and current.'),
+      hasSel:this.state.selRows.length>0, selCount:this.state.selRows.length,
+      bulkPrimaryLabel: BULK[bulkKind].label,
+      showBulkRemind: bulkKind!=='remind_signer',
+      showBulkAssign: bulkKind!=='claim',
+      bulkPrimary:()=>{ const ids=this.state.selRows.slice(); if(!ids.length) return;
+        if(bulkKind==='claim'){ ids.forEach(pid=>{ this.setAssign(pid,me); this.logEvent(pid,'Assigned to '+meName,'#2774ae','assign',{to:me}); }); this.toast(ids.length+' assigned to '+meName); }
+        else if(bulkKind==='remind_signer'){ ids.forEach(pid=>{ const pk=this.byId(pid); const w=this.waitingOn(pk); this.logEvent(pid,'Reminder sent to '+w.name+' ('+(w.role||'signer').toLowerCase()+')','#8195a3','reminder'); }); this.setState(s=>{const r={...s.reminders}; ids.forEach(i=>r[i]=this.ANCHOR); return {reminders:r};}); this.toast(ids.length+' signers reminded & logged'); }
+        else if(bulkKind==='reappt'){ ids.forEach(pid=>this.logEvent(pid,'Reappointment packet drafted from this record','#2774ae')); this.toast(ids.length+' reappointment draft'+(ids.length===1?'':'s')+' started'); }
+        else if(bulkKind==='visa_status'){ ids.forEach(pid=>this.logEvent(pid,'Status update requested from external office','#8195a3')); this.toast('Status update requested on '+ids.length+' case'+(ids.length===1?'':'s')); }
+        else if(bulkKind==='trainee_link'){ ids.forEach(pid=>{ const pk=this.byId(pid); this.logEvent(pid,'Questionnaire link resent to '+this.traineeName(pk),'#8195a3'); }); this.toast('Link resent to '+ids.length+' trainee'+(ids.length===1?'':'s')); }
+        else if(bulkKind==='nudge_preparer'){ ids.forEach(pid=>{ const pk=this.byId(pid); this.logEvent(pid,'Preparer nudged — '+this.nameOf(pk.department_admin_id),'#8195a3'); }); this.toast(ids.length+' preparer'+(ids.length===1?'':'s')+' nudged'); }
+        this.setState({selRows:[]}); },
+      bulkRemind:()=>{ this.state.selRows.forEach(pid=>this.logEvent(pid,'Reminder sent (bulk)','#8195a3')); this.toast(this.state.selRows.length+' reminders sent & logged'); this.setState({selRows:[]}); },
+      bulkReassign:()=>{ this.state.selRows.forEach(pid=>{ this.setAssign(pid,me); this.logEvent(pid,'Assigned to '+meName,'#2774ae','assign',{to:me}); }); this.toast('Reassigned '+this.state.selRows.length+' to '+meName); this.setState({selRows:[]}); },
+      bulkExport:()=>{ this.toast('Exported '+this.state.selRows.length+' to Box'); this.setState({selRows:[]}); },
+      clearSel:this.clearSel,
+      ...this.modalVals()
+    };
+  }
+
+  detailVals(){
+    const p=this.byId(this.state.sel); const st=this.effStatus(p); const t=this.T[p.trainee_id];
+    const backLabel=(this.queueDefs().find(d=>d.id===this.state.queue)||{}).label||'Queues';
+    const statusDot = st==='active'||st==='filed'?'#2e7d4f': st==='returned'?'#c98a34': st==='ato_review'?'#2774ae':'#b7c4ce';
+    // lifecycle strip
+    const idx=this.LIFE.indexOf(st);
+    const life=this.LIFE.map((k,i)=>{ const done=idx>=0&&i<idx, cur=idx>=0&&i===idx; const isVisa=idx<0;
+      return { label:this.LIFE_SHORT[k], dotBg: cur?'#2774ae':done?'#2774ae':'#fff', dotBd: cur||done?'#2774ae':'#d3dce3', lineBg: (done||cur)?'#2774ae':'#eef3f7', txt: cur?'#003b5c':done?'#7f93a1':'#c3d0da', weight: cur?'700':'500' }; });
+    // facts
+    const facts=[];
+    if(p.packet_type!=='visa_case'){
+      facts.push({k:'Dates', v:this.fmtDate(p.appointment_start_date)+' → '+this.fmtDate(p.appointment_end_date)});
+      facts.push({k:'FTE', v:(p.fte_percent!=null?p.fte_percent+'%':'—')});
+      facts.push({k:'Form', v:p.form_template||'—'});
+      facts.push({k:'Title code', v:this.titleLabel(p)});
+    } else {
+      facts.push({k:'Visa type', v:p.visa_type||'—'});
+      facts.push({k:'External office', v:p.external_office||'—'});
+    }
+    facts.push({k:'Department', v:(t?t.home_department:'—')});
+    facts.push({k:'Research', v:p.research_title||'—'});
+    // funding
+    const fl=(this.F[p.id]||[]).map(f=>({ fau:f.fau, pct:(f.percent_distribution!=null?f.percent_distribution+'%':''), fmName:this.nameOf(f.fund_manager_id), statusText: f.approval_status==='approved'?'Approved':f.approval_status==='declined'?'Declined':'Pending', dot: f.approval_status==='approved'?'#2e7d4f':f.approval_status==='declined'?'#c0503a':'#b7c4ce' }));
+    // signature
+    const steps=(this.S[p.id]||[]); const firstPending=steps.find(s=>s.status==='pending');
+    const stall=this.stallDays(p), TH=this.stallThreshold();
+    const SGp=(this.SG||{})[p.id]||[];
+    const sigOld=(s)=>{ const done=s.status==='signed'; const pend=s.status==='pending'; const isStall=pend && s===firstPending && st==='out_for_signature' && stall>TH;
+      return { n: done?'✓':s.step_number, roleLabel:s.label||this.ROLE[s.role]||s.role, signer:this.nameOf(s.signer_id),
+        badgeBg: done?'#2774ae':pend?'#fff':'#fff', badgeFg: done?'#fff':pend?'#2774ae':'#b7c4ce', badgeBd: done?'#2774ae':pend?'#2774ae':'#e0e8ef',
+        statusText: done?'Signed':pend?'Pending':'Not started', statusColor: done?'#5b6f7d':pend?'#2774ae':'#a6b4bf',
+        sub: isStall?(stall+'d — past threshold'):'', subColor:'#8195a3', hasActs:false, acts:[] }; };
+    const sig=SGp.length ? steps.flatMap(s=>{ const rs=SGp.filter(g=>g.seq===s.step_number); return rs.length?rs.map(g=>this.sigRow(g)):[sigOld(s)]; }) : steps.map(sigOld);
+    // attachments
+    const attsA=this.attsFor(p);
+    const atts=attsA.map(a=>({ label:a.label, mark:a.present?'✓':'', bd:a.present?(a.verified?'#2774ae':'#cfdae4'):'#d8a59a', bg:a.present?(a.verified?'#2774ae':'#fff'):'#fff', color:a.present?'#2f4451':'#a3543f', statusText:a.present?(a.verified?'ATO-verified':'present · unverified'):'missing' }));
+    // validation
+    const vraw=(this.V[p.id]||[]);
+    const vals=vraw.map(v=>{ const key=p.id+'|'+v.rule_id; const ov=this.state.ovr[key]; const isWarn=v.severity==='warning'&&!v.passed;
+      return { rule:v.rule_id, message:v.message, dot: v.passed?'#cfdae4':(v.severity==='blocking'?'#5b6f7d':'#a9b8c4'), sev:v.severity, sevColor: v.severity==='blocking'?'#5b6f7d':v.severity==='warning'?'#8195a3':'#a9b8c4',
+        canOverride: isWarn && !ov, overridden: ov?('Overridden: '+ov):'', onOverride:()=>this.openOverride(p.id,v.rule_id,v.message) }; });
+    // people
+    const people=[{role:'Principal investigator', name:this.nameOf(p.pi_id), email:this.emailOf(p.pi_id)}];
+    if(p.faculty_mentor_id) people.push({role:'Faculty mentor', name:this.nameOf(p.faculty_mentor_id), email:this.emailOf(p.faculty_mentor_id)});
+    people.push({role:'Department administrator', name:this.nameOf(p.department_admin_id), email:this.emailOf(p.department_admin_id)});
+    // advance gate
+    const nx=this.NEXT[st]; let canAdvance=!!nx, advanceBlocked=false, advanceBlockedText='';
+    if(st==='ato_review'){ const attOk=attsA.every(a=>a.present&&a.verified); const blk=vraw.some(v=>!v.passed&&v.severity==='blocking'); if(!attOk){ canAdvance=false; advanceBlocked=true; advanceBlockedText='Blocked — all required attachments must be present and ATO-verified'; } else if(blk){ canAdvance=false; advanceBlocked=true; advanceBlockedText='Blocked — a blocking rule is failing'; } }
+    if(['closed','returned','denied','referred','approved'].includes(st)) canAdvance=false;
+    const canReturn=['ato_review','out_for_signature','validating','fully_signed'].includes(st);
+    // exec
+    const showExec=['filed','active'].includes(st) || (p.packet_type==='termination_notice'&&st==='out_for_signature');
+    const execList=this.EXEC[p.packet_type]||this.EXEC.new_appointment;
+    const es=this.state.exec[p.id]||{};
+    const exec=execList.map((label,i)=>{ const d=es[i]&&es[i].done; return { label, mark:d?'✓':'', bg:d?'#f4faf6':'#fff', bd:d?'#cfe6d6':'#eef3f7', boxBd:d?'#2e7d4f':'#cfdae4', boxBg:d?'#2e7d4f':'#fff', labelColor:d?'#3a4f5c':'#2f4451', meta:d?('Done · '+es[i].by):'', system:this.EXEC_SYS[label]||'', onToggle:()=>this.toggleExec(p.id,i,label) }; });
+    const execDone=exec.filter(e=>e.mark).length;
+    // reminders
+    const lastR=this.state.reminders[p.id];
+    return { det:{
+      pid:p.id, name:this.traineeName(p), origin: p.origin==='system'?'System-generated':'Admin-originated',
+      oneLiner: (this.PT[p.packet_type]||p.packet_type)+' · '+(this.SL[st]||st)+(p.form_template?(' · '+p.form_template):'')+' · '+this.titleLabel(p),
+      statusLabel:this.SL[st]||st, statusDot, daysInState:(this.daysSince(this.sinceDate(p))||0)+'d in state', analystName:(this.analystOf(p)?this.nameOf(this.analystOf(p)):'Unassigned'),
+      life, facts, funding:fl, hasFunding:fl.length>0, fundNote: fl.length+' line'+(fl.length===1?'':'s'),
+      sig, atts, hasAtts:atts.length>0, noAtts:atts.length===0, noAttsMsg: p.packet_type==='termination_notice'?'System-generated notice — nothing to collect. The signed copy files itself on completion.': p.packet_type==='visa_case'?'Visa documents live with the external office, not in the packet.':'No attachments required for this form.',
+      vals, hasVals:vals.length>0, noVals:vals.length===0, noValsMsg: p.packet_type==='termination_notice'?'Nothing to validate — termination notices carry no funding lines or title-code rules.': p.packet_type==='visa_case'?'Visa cases are tracked, not validated — eligibility sits with the external office.':(['draft','awaiting_trainee'].includes(st)?'Rules run when the packet is submitted to ATO.':'No rule results recorded for this packet.'),
+      people,
+      events:this.buildEvents(p),
+      canAdvance, advanceLabel: nx?('Advance to '+(this.SL[nx]||nx)):'', onAdvance:()=>this.advance(p.id),
+      advanceBlocked, advanceBlockedText,
+      canReturn, onReturn:()=>this.openReturn(p.id), onEmail:()=>this.openEmail(p.id), onReminder:()=>this.openReminder(p.id), onReassign:()=>this.openReassign(p.id),
+      lastReminded: lastR?('Last reminded '+this.fmtDate(lastR)):'',
+      showExec, exec, execCount:execDone+' of '+exec.length+' done'
+    }, backLabel };
+  }
+
+  settingsVals(){
+    const s=this.state.settings;
+    const setRows=[
+      {key:'stall', label:'Signature stall threshold', help:'Days a signer can sit before the system auto-nudges, then the repeat cadence.'},
+      {key:'reappt', label:'Reappointment lead times', help:'When expiring-appointment reminders fire, in days before the end date.'},
+      {key:'h1b', label:'Visa / H-1B lead times', help:'Days before the H-1B window opens.'},
+      {key:'visaExp', label:'Visa expiry lead times', help:'Days before a visa expiry.'},
+      {key:'trainee', label:'Trainee response threshold', help:'Days before an unfinished questionnaire is chased, then repeat.'},
+      {key:'quiet', label:'Quiet window', help:'Don\u2019t re-send if reminded within this many days.'}
+    ].map(r=>({...r, value:s[r.key], onInput:(e)=>this.setSetting(r.key,e.target.value)}));
+    const autoRows=[
+      {key:'signatures', label:'Signature nudges'}, {key:'expiry', label:'Appointment expiry reminders'},
+      {key:'trainee', label:'Trainee questionnaire chasers'}, {key:'reappt', label:'Reappointment prompts'}
+    ].map(a=>{ const on=this.state.autos[a.key]; return {...a, onToggle:()=>this.toggleAuto(a.key), trackBg:on?'#2774ae':'#d3dce3', knobLeft:on?'18px':'2px', state:on?'Automatic':'Manual'}; });
+    const tabs=Object.entries(this.state.templates).map(([k,v])=>({ key:k, label:v.label, sel:k===this.state.tplSel }));
+    const tplTabs=tabs.map(t=>({ label:t.label, onSelect:()=>this.selectTpl(t.key), fg:t.sel?'#fff':'#5b6f7d', bg:t.sel?'#2774ae':'#fff', bd:t.sel?'#2774ae':'#dde7ef' }));
+    const cur=this.state.templates[this.state.tplSel];
+    return { setRows, autoRows, tplTabs, tplSubject:cur.subject, tplBody:cur.body, onTplSubject:(e)=>this.setTpl('subject',e.target.value), onTplBody:(e)=>this.setTpl('body',e.target.value) };
+  }
+
+  modalVals(){
+    const m=this.state.modal;
+    const base={ modalOpen:!!m, closeModal:this.closeModal, stop:this.stop, modalConfirm:this.confirmModal,
+      isCompose:false, isReturn:false, isReassign:false, isOverride:false, modalWidth:'520px', modalTitle:'', confirmLabel:'Confirm', confirmBg:'#2774ae', confirmOpacity:'1' };
+    if(!m) return base;
+    if(m.type==='email'||m.type==='reminder'){
+      const tpls=Object.entries(this.state.templates).map(([k,v])=>({ label:v.label, onPick:()=>this.pickTemplate(k), fg:'#5b6f7d', bg:'#fff', bd:'#dde7ef' }));
+      return {...base, isCompose:true, modalWidth:'560px', modalTitle: m.type==='email'?'Email preparer':'Send reminder',
+        cmpTo:m.to, cmpToEmail:m.toEmail, cmpHasTemplates:true, cmpTemplates:tpls,
+        cmpSubject:m.subject, cmpBody:m.body, onCmpSubject:(e)=>this.setCmp('subject',e.target.value), onCmpBody:(e)=>this.setCmp('body',e.target.value),
+        confirmLabel: m.type==='email'?'Send email':'Send reminder' };
+    }
+    if(m.type==='return') return {...base, isReturn:true, modalTitle:'Return for correction', confirmLabel:'Return to preparer', confirmBg:'#a3543f', rtnNote:m.note, onRtnNote:(e)=>this.setCmp('note',e.target.value)};
+    if(m.type==='reassign'){ const opts=(this.P?Object.values(this.P):[]).filter(p=>p.roles&&p.roles.includes('ato_staff')).map(p=>({ name:p.full_name, initials:this.initials(p.id), current:this.analystOf(this.byId(m.pid))===p.id?'Current':'', bg: this.analystOf(this.byId(m.pid))===p.id?'#f0f6fb':'#fff', bd:this.analystOf(this.byId(m.pid))===p.id?'#cfe0f0':'#dde7ef', onPick:()=>this.doReassign(m.pid,p.id) }));
+      return {...base, isReassign:true, modalTitle:'Reassign analyst', reassignOpts:opts, confirmLabel:'Done', confirmBg:'#fff', confirmOpacity:'0'}; }
+    if(m.type==='override') return {...base, isOverride:true, modalTitle:'Override warning', ovRule:m.rule, ovMessage:m.message, ovReason:m.reason, onOvReason:(e)=>this.setCmp('reason',e.target.value), confirmLabel:'Save override', confirmBg:'#a0742a'};
+    return base;
+  }
+}
+</script>
+</body>
+</html>
